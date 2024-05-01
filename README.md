@@ -23,7 +23,7 @@ This music player is built using JavaScript and offers a seamless experience for
 
 ## Usage
 
-1. Visit [coreylawrencemusic.duckdns.org](coreylawrencemusic.duckdns.org) in your web browser.
+1. Visit [coreylawrencemusic.duckdns.org](https://coreylawrencemusic.duckdns.org) in your web browser.
 2. Press play, or select a song from the menu.
 3. Enjoy Corey Lawrence's music!
 
