@@ -1,0 +1,201 @@
+html {
+  overflow-x: hidden;
+}
+
+body {
+  padding-top: 0.5em;
+  background: linear-gradient(#163264, #071329);
+  background-attachment: fixed;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin: auto;
+  color: white;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  background-color: rgb(15, 15, 15);
+  width: 100vw;
+  position: relative;
+  touch-action: manipulation;
+}
+
+button {
+  touch-action: manipulation;
+}
+img {
+  touch-action: manipulation;
+}
+
+#album-art {
+  margin-bottom: 0em;
+  border-radius: 2em;
+  width: 46vh;
+  filter: drop-shadow(0.25vh 0.25vh 25vh #173466);
+}
+
+.main-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  height: 95vh;
+}
+
+.middle-area {
+  text-align: left;
+  margin: 5vh 4vw 0vh 4vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+a {
+  text-decoration: none; /* Remove underline by default */
+  color: inherit; /* Inherit text color from parent */
+  font-style: normal;
+  font-weight: lighter;
+}
+
+.song-area {
+  padding-top: 0.5em;
+  background-color: rgb(15, 15, 15);
+  height: 100%;
+  width: 100%;
+  margin: 1em 2em 0em 2em;
+  align-items: center;
+  align-content: center;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0.5em;
+  z-index: 9999;
+}
+
+.song {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between; /* Added to align items at the start and end */
+  padding: 0.25em;
+  padding-top: 0.15em; /* Added 'em' units */
+  width: 85%;
+  opacity: 0.75; /* Changed to opacity */
+}
+
+.separator {
+  align-items: center;
+  border-bottom: #ffffff solid 0.025em;
+  width: 85%;
+  opacity: 0.75; /* Changed to opacity */
+}
+
+audio {
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 7vh 1vw 15vh 1vw;
+}
+
+.control-button {
+  border: none;
+  border-radius: 50%;
+  width: 5em;
+  height: 5em;
+  margin: 0 1.5em;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent; /* Remove default background color */
+  transition: background-image 0.3s ease-in-out; /* Smooth transition */
+}
+
+.play-button,
+.skip-button {
+  background-color: transparent; /* Remove default background color */
+  background-size: contain; /* Ensure image fits into button */
+  background-repeat: no-repeat; /* Prevent image from repeating */
+  background-position: center; /* Center image */
+}
+
+.progress {
+  width: 47vh;
+  height: 0.22em;
+  background-color: #888;
+  position: relative;
+  border-radius: 5px;
+  margin-top: 20px;
+  overflow: hidden; /* Hide overflowing progress bar */
+}
+
+.progress-bar {
+  filter: opacity(50%);
+  height: 100%;
+  background-color: white;
+  border-radius: 5px;
+}
+
+/* Keyframes for progress bar animation */
+@keyframes progress-animation {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+#artist {
+  filter: opacity(70%);
+  margin-top: -1em;
+  margin-bottom: -0.25em;
+  font-weight: lighter;
+  z-index: 9999;
+  text-align: center;
+}
+
+#title {
+  z-index: 9999;
+  text-align: center;
+}
+
+/* Media query for wider screens */
+@media only screen and (min-width: 700px) {
+  body {
+    padding-top: 0.25em;
+    margin-top: 0;
+    max-width: 52em;
+    margin-bottom: 2vh;
+  }
+  .main-player {
+    margin-top: 1em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    width: 5em;
+  }
+  .progress {
+    width: 100%;
+  }
+  #album-art {
+    width: 37vw;
+    max-width: 20em;
+  }
+
+  .song-area {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 95%;
+    border-radius: 2em; /* Equal rounding for all corners */
+    margin-top: -1vh;
+    margin-bottom: 2vh;
+  }
+}
