@@ -42,3 +42,7 @@ This music player is built using JavaScript and offers a seamless experience for
 ## Media Session API Integration
 
 The JavaScript code utilizes the Media Session API to provide seamless control over the music player from the user's lock screen or notification center. By setting metadata such as the song title, artist, and album, as well as defining action handlers for play, pause, skip forward, and skip backward events, the app seamlessly integrates with the device's media controls.
+
+## Hosting
+
+This web app is hosted on a server located inside my home. I've configured Nginx along with SSL through Let's Encrypt, ensuring secure access to the app. With 24/7 hosting directly from my home server, users can access Corey Lawrence's music anytime, anywhere.
