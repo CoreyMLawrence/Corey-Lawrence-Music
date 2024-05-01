@@ -3,7 +3,7 @@
 Welcome to the Corey Lawrence Music Web App! This single-page web app allows you to enjoy the music of Corey Lawrence with ease. Whether you're a fan of "Waubash Cannonball" or "Doc's Guitar," you can easily select and play your favorite tracks.
 
 ## Screenshots
-   ![iPhone & iPad](./Screenshots/1.png)
+   ![iPhone & iPad](./Screenshots/1.jpg)
 
 ## Overview
 
