@@ -45,4 +45,4 @@ The JavaScript code utilizes the Media Session API to provide seamless control o
 
 ## Hosting
 
-This web app is hosted on a server located inside my home. I've configured Nginx along with SSL through Let's Encrypt, ensuring secure access to the app. With 24/7 hosting directly from my home server, users can access Corey Lawrence's music anytime, anywhere.
+This web app is hosted on a server located inside my home. I have configured Nginx along with SSL through Let's Encrypt, ensuring secure access to the app. With 24/7 hosting directly from my home server, users can access Corey Lawrence's music anytime, anywhere.
