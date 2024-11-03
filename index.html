@@ -33,9 +33,11 @@
     gtag('config', 'G-HZM7R7RPG9');
   </script>
   <body>
-    <a id="arrow-link" onclick="handleArrowClick()">
-      <img id="image" src="down-arrow.png" />
+    <!-- Arrow navigation -->
+    <a id="arrow-link">
+      <img id="image" src="down-arrow.png" alt="Navigation arrow" />
     </a>
+
     <div id="page-content">
       <div class="main-player">
         <img
@@ -44,79 +46,109 @@
           src="./album-art-1024.jpg"
           alt="album art"
         />
+
+        <!-- Audio element -->
         <audio
-          style="display: none"
           id="audioPlayer"
           preload=""
           poster="audio-poster.jpg"
           crossorigin="anonymous"
+          style="display: none"
         ></audio>
+
         <div class="middle-area">
+          <!-- Title and artist -->
           <h1 id="title">Waubash Cannonball</h1>
           <h4 id="artist">Corey Lawrence</h4>
+
+          <!-- Progress bar -->
           <div class="progress">
             <div class="progress-bar" id="progressBar"></div>
           </div>
+
+          <!-- Time display -->
           <div class="time">
             <div id="count-up">0:00</div>
             <div id="count-down">-0:00</div>
           </div>
+
+          <!-- Player controls -->
           <div class="controls">
-            <button class="control-button skip-button" onclick="skipBack()">
+            <!-- Skip back button -->
+            <button
+              class="control-button skip-button"
+              onclick="AudioController.skipBack()"
+            >
               <img
                 class="no-zoom"
                 style="height: 2.2em"
-                class="image-button"
                 src="skipback.png"
-                alt="Skip"
+                alt="Skip Back"
               />
             </button>
+
+            <!-- Play/Pause button -->
             <button
               class="control-button play-button"
-              onclick="togglePlayPause()"
+              onclick="AudioController.togglePlayPause()"
             >
               <img
                 class="no-zoom"
                 id="playPauseImg"
                 style="height: 6em"
                 src="play.png"
-                alt="Play"
+                alt="Play/Pause"
               />
             </button>
-            <button class="control-button skip-button" onclick="skipForward()">
+
+            <!-- Skip forward button -->
+            <button
+              class="control-button skip-button"
+              onclick="AudioController.skipForward()"
+            >
               <img
                 class="no-zoom"
                 style="height: 2.2em"
-                class="image-button"
                 src="skipforward.png"
-                alt="Skip"
+                alt="Skip Forward"
               />
             </button>
           </div>
         </div>
       </div>
+
+      <!-- Song list -->
       <div id="song-drawer"></div>
-      <div id="song-area" id="songs-container">
+      <div id="song-area">
+        <!-- Waubash Cannonball -->
         <a id="waubash-song" href="#" class="song">
           <p style="float: left">Waubash Cannonball</p>
           <p style="float: right">1:35</p>
         </a>
         <div class="separator"></div>
+
+        <!-- Windy & Warm -->
         <a id="windyandwarm-song" href="#" class="song">
           <p style="float: left">Windy & Warm</p>
           <p style="float: right">2:19</p>
         </a>
         <div class="separator"></div>
+
+        <!-- Freight Train -->
         <a id="freighttrain-song" href="#" class="song">
           <p style="float: left">Freight Train</p>
           <p style="float: right">1:54</p>
         </a>
         <div class="separator"></div>
+
+        <!-- Cannonball Rag -->
         <a id="cannonballrag-song" href="#" class="song">
           <p style="float: left">Cannonball Rag</p>
           <p style="float: right">1:40</p>
         </a>
         <div class="separator"></div>
+
+        <!-- Doc's Guitar -->
         <a id="docsguitar-song" href="#" class="song">
           <p style="float: left">Doc's Guitar</p>
           <p style="float: right">0:58</p>

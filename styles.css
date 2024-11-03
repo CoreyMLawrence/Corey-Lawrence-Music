@@ -111,16 +111,19 @@ a {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 0.25em;
-  padding-top: 0.15em;
-  width: 85%;
+  padding: 0.15em 0.5em;
+  width: calc(87% - 1em);
   opacity: 0.75;
+}
+
+.song:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .separator {
   align-items: center;
   border-bottom: #d7d7d7 solid 0.025em;
-  width: 85%;
+  width: 87%;
   filter: opacity(50%);
 }
 
@@ -201,6 +204,11 @@ audio {
   font-weight: 100;
   opacity: 0.75;
   max-width: 26em;
+  pointer-events: none;
+  -webkit-user-select: none; /* Prevent text selection in Safari */
+  -moz-user-select: none; /* Prevent text selection in Firefox */
+  -ms-user-select: none; /* Prevent text selection in Internet Explorer */
+  pointer-events: none; /* Disable all mouse and touch events */
 }
 
 #image {
