@@ -15,9 +15,6 @@ The Corey Lawrence Music Web App reflects my approach to crafting technology tha
 
 ### Key Features:
 
-- **Instant Play & Pause**  
-  With one click, enjoy seamless control over playback. Play, pause, and skip tracks easily for an uninterrupted listening experience.
-
 - **Dynamic Song Menu**  
   The song menu is dynamically generated, making it easy to update the playlist and explore my tracks without needing constant changes to the app's code.
 
