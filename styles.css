@@ -1,5 +1,6 @@
 html {
-  overflow-x: hidden;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  overflow-y: scroll; /* Enable vertical scrolling without a scrollbar */
 }
 
 h1 {
@@ -11,8 +12,14 @@ h1 {
   outline: none;
 }
 
+/* Hide the scrollbar for webkit browsers */
 ::-webkit-scrollbar {
   display: none; /* Hide the scrollbar */
+}
+
+/* Additional styles for Firefox */
+* {
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
 }
 
 body {
@@ -73,6 +80,7 @@ a {
   justify-content: center;
   z-index: 2;
   height: 100svh;
+  overflow: scroll;
 }
 
 .middle-area {
@@ -120,6 +128,20 @@ a {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
+.playing {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+#waubash-song {
+  border-top-left-radius: 1em;
+  border-top-right-radius: 1em;
+}
+
+#docsguitar-song {
+  border-bottom-left-radius: 1em;
+  border-bottom-right-radius: 1em;
+}
+
 .separator {
   align-items: center;
   border-bottom: #d7d7d7 solid 0.025em;
@@ -162,22 +184,32 @@ audio {
   background-position: center;
 }
 
+.progress-container {
+  height: 3em;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: -0.5em 0;
+  cursor: pointer;
+}
+
 .progress {
   height: 0.22em;
   background-color: #888;
   position: relative;
-  border-radius: 5px;
+  border-radius: 0.11em;
   margin-top: 5svh;
   overflow: hidden;
   width: 85vw;
   max-width: 20em;
+  cursor: pointer;
 }
 
 .progress-bar {
   filter: opacity(50%);
-  height: 100%;
+  height: 0.22em;
   background-color: white;
-  border-radius: 5px;
+  border-radius: 0.11em;
 }
 
 #artist {
@@ -314,7 +346,8 @@ audio {
   #song-area {
     position: static;
     max-width: 55em;
-    width: 100%;
+    width: calc(100% - 2em);
+
     border-radius: 2em;
     margin: 2vh 0em 0em 0em;
   }
@@ -332,6 +365,9 @@ audio {
   }
   .main-player {
     height: 100vh;
+  }
+  .playing {
+    background-color: rgba(255, 255, 255, 0.1) !important;
   }
 }
 

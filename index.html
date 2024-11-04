@@ -17,6 +17,14 @@
     <link rel="apple-touch-icon" sizes="128x128" href="icon.png" />
     <meta name="apple-mobile-web-app-title" content="Corey's Music" />
     <meta name="apple-touch-startup-image" content="load.png" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <script
+      src="https://unpkg.com/nosleep.js@0.12.0/dist/NoSleep.min.js"
+      async
+    ></script>
+    <script defer src="script.js"></script>
   </head>
   <!-- Google tag (gtag.js) -->
   <script
@@ -50,9 +58,12 @@
         <!-- Audio element -->
         <audio
           id="audioPlayer"
-          preload=""
+          preload="auto"
           poster="audio-poster.jpg"
           crossorigin="anonymous"
+          playsinline
+          webkit-playsinline
+          x-webkit-airplay="allow"
           style="display: none"
         ></audio>
 
@@ -62,8 +73,10 @@
           <h4 id="artist">Corey Lawrence</h4>
 
           <!-- Progress bar -->
-          <div class="progress">
-            <div class="progress-bar" id="progressBar"></div>
+          <div class="progress-container">
+            <div class="progress">
+              <div class="progress-bar" id="progressBar"></div>
+            </div>
           </div>
 
           <!-- Time display -->
@@ -75,23 +88,17 @@
           <!-- Player controls -->
           <div class="controls">
             <!-- Skip back button -->
-            <button
-              class="control-button skip-button"
-              onclick="AudioController.skipBack()"
-            >
+            <button class="control-button skip-button" id="skipBackButton">
               <img
                 class="no-zoom"
                 style="height: 2.2em"
-                src="skipback.png"
-                alt="Skip Back"
+                src="./skipback.png"
+                alt="Previous Track"
               />
             </button>
 
             <!-- Play/Pause button -->
-            <button
-              class="control-button play-button"
-              onclick="AudioController.togglePlayPause()"
-            >
+            <button class="control-button play-button" id="playPauseButton">
               <img
                 class="no-zoom"
                 id="playPauseImg"
@@ -102,15 +109,12 @@
             </button>
 
             <!-- Skip forward button -->
-            <button
-              class="control-button skip-button"
-              onclick="AudioController.skipForward()"
-            >
+            <button class="control-button skip-button" id="skipForwardButton">
               <img
                 class="no-zoom"
                 style="height: 2.2em"
-                src="skipforward.png"
-                alt="Skip Forward"
+                src="./skipforward.png"
+                alt="Next Track"
               />
             </button>
           </div>
@@ -155,8 +159,19 @@
         </a>
       </div>
     </div>
-    <script src="script.js"></script>
-    <!-- <script src="nosleep.mjs" type="module"></script>  -->
-    <!-- Include script.js file -->
+
+    <!-- Register Service Worker -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+          .register('/service-worker.js', { scope: '/' })
+          .then((reg) => {
+            console.log('Service Worker registered successfully', reg);
+          })
+          .catch((error) => {
+            console.warn('Service Worker registration failed', error);
+          });
+      }
+    </script>
   </body>
 </html>
