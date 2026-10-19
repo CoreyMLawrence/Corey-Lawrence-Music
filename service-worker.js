@@ -1,5 +1,5 @@
 // Service Worker with Network-First strategy for assets to ensure updates are always instant
-const CACHE_NAME = 'corey-music-cache-v12';
+const CACHE_NAME = 'corey-music-cache-v13';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

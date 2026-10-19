@@ -465,14 +465,7 @@ a {
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.15s ease;
-}
-
-.song-row:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-}
-
-.song-row:active {
-  background-color: rgba(255, 255, 255, 0.15);
+  -webkit-tap-highlight-color: transparent;
 }
 
 .song-row.playing {
