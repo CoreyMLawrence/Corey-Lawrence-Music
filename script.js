@@ -1,7 +1,7 @@
 /**
- * Corey Lawrence Music - Spotify-Inspired Controller
- * Modeled on Spotify's Now Playing screen architecture, control proportions,
- * queue drawer curtain reveal, precision scrubbing, and iOS audio reliability.
+ * Corey Lawrence Music - Authentic & Polished Controller
+ * Modeled on Spotify's control proportions & Queue, with original shallow arrow
+ * at bottom, curtain drawer reveal, vertical flip, and reliable iOS playback.
  */
 
 'use strict';
@@ -65,10 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
     playIconSvg: document.getElementById('playIconSvg'),
     skipForwardBtn: document.getElementById('skipForwardButton'),
     repeatBtn: document.getElementById('repeatButton'),
-    minimizeBtn: document.getElementById('minimizeBtn'),
-    queueBtn: document.getElementById('queueBtn'),
     arrowLink: document.getElementById('arrow-link'),
-    chevronIcon: document.getElementById('chevronIcon'),
+    arrowImg: document.getElementById('image'),
     mainPlayer: document.getElementById('mainPlayer'),
     songArea: document.getElementById('song-area'),
     songRows: document.querySelectorAll('.song')
@@ -318,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Scrubber Controller (Precision Pointer Capture & Scratching)
+  // Scrubber Controller (Precision Pointer Capture)
   class ScrubberController {
     constructor(engine) {
       this.engine = engine;
@@ -399,15 +397,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     init() {
-      // Drawer trigger buttons
-      const triggers = [DOM.arrowLink, DOM.minimizeBtn, DOM.queueBtn].filter(Boolean);
-      triggers.forEach((btn) => {
-        btn.addEventListener('click', (e) => {
+      // Shallow arrow click toggles drawer
+      if (DOM.arrowLink) {
+        DOM.arrowLink.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
           this.toggle();
         });
-      });
+      }
 
       // Swipe Gestures anywhere on the screen
       window.addEventListener(
@@ -445,10 +442,9 @@ document.addEventListener('DOMContentLoaded', () => {
       DOM.mainPlayer.addEventListener('click', (e) => {
         if (
           state.isDrawerOpen &&
-          !e.target.closest('.drawer-trigger') &&
+          !e.target.closest('#arrow-link') &&
           !e.target.closest('.controls-row') &&
-          !e.target.closest('.progress-section') &&
-          !e.target.closest('.top-bar')
+          !e.target.closest('.progress-section')
         ) {
           this.close();
         }

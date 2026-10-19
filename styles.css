@@ -1,4 +1,4 @@
-/* Corey Lawrence Music - Spotify-Inspired Design System */
+/* Corey Lawrence Music - Authentic & Polished Design System */
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -19,17 +19,18 @@
   scrollbar-width: none;
 }
 
+/* Notch & Safe Area Tint */
 html {
-  background-color: #081224;
+  background-color: #163264;
   height: 100%;
   overflow: hidden;
 }
 
 body {
-  background: linear-gradient(180deg, #1b3d75 0%, #163264 35%, #0d1e3d 70%, #081224 100%);
+  background: linear-gradient(180deg, #163264 0%, #112850 50%, #0c1a34 100%);
   background-attachment: fixed;
   background-size: cover;
-  background-color: #081224;
+  background-color: #163264;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -75,18 +76,18 @@ a {
   right: 0;
   bottom: 0;
   overflow: hidden;
-  background: linear-gradient(180deg, #1b3d75 0%, #163264 35%, #0d1e3d 70%, #081224 100%);
-  background-color: #081224;
+  background: linear-gradient(180deg, #163264 0%, #112850 50%, #0c1a34 100%);
+  background-color: #163264;
 }
 
 /* ==========================================================================
-   Main Player (Foreground - Spotify Now Playing Screen)
+   Main Player (Foreground - Curtain that slides up to reveal queue)
    ========================================================================== */
 .main-player {
-  background: linear-gradient(180deg, #1b3d75 0%, #163264 35%, #0d1e3d 70%, #081224 100%);
+  background: linear-gradient(180deg, #163264 0%, #112850 50%, #0c1a34 100%);
   background-attachment: fixed;
   background-size: cover;
-  background-color: #081224;
+  background-color: #163264;
   width: 100%;
   height: 100%;
   min-height: 100%;
@@ -95,8 +96,8 @@ a {
   left: 0;
   right: 0;
   bottom: 0;
-  padding-top: max(2.5rem, calc(env(safe-area-inset-top) + 0.5rem));
-  padding-bottom: max(1.5rem, calc(env(safe-area-inset-bottom) + 0.5rem));
+  padding-top: max(1.5rem, calc(env(safe-area-inset-top) + 0.5rem));
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -113,92 +114,50 @@ a {
 }
 
 /* ==========================================================================
-   Top Header (Spotify Now Playing Header)
-   ========================================================================== */
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 0 1.5rem;
-  height: 2.75rem;
-  flex-shrink: 0;
-}
-
-.top-context {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.context-label {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.65);
-}
-
-.context-title {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin-top: 1px;
-}
-
-.icon-btn {
-  background: none;
-  border: none;
-  color: #ffffff;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem;
-  opacity: 0.85;
-  transition: opacity 0.15s, transform 0.15s;
-}
-
-.icon-btn:active {
-  transform: scale(0.92);
-  opacity: 1;
-}
-
-/* ==========================================================================
-   Main Player Column (Spotify Standard Content Width: max 24rem)
+   Main Player Column (Max width 24rem)
    ========================================================================== */
 .player-content {
   width: 100%;
   max-width: 24rem;
-  padding: 0 1.75rem;
+  padding: 0 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   flex-grow: 1;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
 }
 
-/* Album Art: Spotify 1:1 Square Card */
+/* Large Album Art (Expanded to fill available space) */
 .artwork-container {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0.4rem 0;
+  flex-grow: 1;
+  min-height: 0;
+  margin: 0.25rem 0 0.5rem 0;
 }
 
 #album-art {
   width: 100%;
-  max-width: 20.5rem;
-  max-height: 40svh;
+  max-width: 22rem;
+  max-height: 48svh;
   aspect-ratio: 1 / 1;
   object-fit: cover;
-  border-radius: 8px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+  border-radius: 10px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6);
   pointer-events: none;
   flex-shrink: 0;
   transition: transform 0.35s ease;
+}
+
+/* Controls Group (Grouped down close to the bottom arrow) */
+.bottom-controls-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  flex-shrink: 0;
 }
 
 /* ==========================================================================
@@ -209,7 +168,6 @@ a {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin-top: 0.4rem;
 }
 
 .track-text {
@@ -234,16 +192,31 @@ a {
   font-size: 0.95rem;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.65);
-  margin-top: 0.2rem;
+  margin-top: 0.15rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+.icon-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.icon-btn:active {
+  transform: scale(0.92);
+}
+
 .heart-btn {
   color: rgba(255, 255, 255, 0.7);
   flex-shrink: 0;
-  padding: 0.25rem;
   transition: color 0.2s ease, transform 0.15s ease;
 }
 
@@ -260,11 +233,10 @@ a {
    ========================================================================== */
 .progress-section {
   width: 100%;
-  margin-top: 0.4rem;
 }
 
 .progress-container {
-  height: 1.5rem;
+  height: 1.25rem;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -325,7 +297,7 @@ a {
   font-weight: 400;
   color: rgba(255, 255, 255, 0.65);
   font-variant-numeric: tabular-nums;
-  margin-top: -0.15rem;
+  margin-top: 0.2rem;
 }
 
 /* ==========================================================================
@@ -336,7 +308,7 @@ a {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin-top: 0.4rem;
+  padding: 0.25rem 0;
 }
 
 .control-btn {
@@ -391,51 +363,30 @@ a {
 }
 
 /* ==========================================================================
-   Bottom Utility Row (Device Output & Queue Drawer Trigger)
+   Little Shallow Arrow (Positioned at bottom always, flips vertically)
    ========================================================================== */
-.bottom-utility-row {
+#arrow-link {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: 100%;
-  padding: 0 1.5rem;
-  height: 2.75rem;
+  padding: 0.4rem 0 0.25rem 0;
+  margin-bottom: max(0.25rem, env(safe-area-inset-bottom));
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
   flex-shrink: 0;
 }
 
-.device-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.75);
+#image {
+  width: 36px;
+  height: auto;
+  pointer-events: none;
+  transition: transform 0.28s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.drawer-trigger {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
-  cursor: pointer;
-  padding: 0.4rem 0.85rem;
-  border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.08);
-  transition: background-color 0.2s, transform 0.15s;
-}
-
-.drawer-trigger:active {
-  background: rgba(255, 255, 255, 0.16);
-  transform: scale(0.96);
-}
-
-.chevron-svg {
-  transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.main-player.drawer-open .chevron-svg {
-  transform: rotate(180deg);
+/* Flips vertically without spinning! */
+.main-player.drawer-open #image {
+  transform: scaleY(-1);
 }
 
 /* ==========================================================================
@@ -447,7 +398,7 @@ a {
   left: 0;
   right: 0;
   height: 26.5rem;
-  background-color: #081224;
+  background-color: #0c1a34;
   z-index: 1;
   display: flex;
   flex-direction: column;
@@ -573,11 +524,10 @@ a {
 }
 
 /* ==========================================================================
-   Tablet & Desktop Layout (Spotify Desktop / iPad 2-Column Mode)
+   Tablet & Desktop Layout (iPad 2-Column Mode)
    ========================================================================== */
 @media only screen and (min-width: 668px) {
-  .top-btn,
-  .drawer-trigger {
+  #arrow-link {
     display: none;
   }
 
@@ -626,7 +576,7 @@ a {
   }
 
   #album-art {
-    max-width: 18rem;
+    max-width: 20rem;
     max-height: none;
   }
 
@@ -648,11 +598,11 @@ a {
   }
 }
 
-/* Small Screens (e.g. iPhone SE) */
+/* Small Screens */
 @media only screen and (max-height: 680px) and (max-width: 480px) {
   #album-art {
-    max-width: 15rem;
-    max-height: 32svh;
+    max-width: 16rem;
+    max-height: 38svh;
   }
 
   #title {
