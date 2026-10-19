@@ -1,6 +1,11 @@
 # Corey Lawrence Music Web App
 
-Welcome to my personal music app! This progressive web app is built to provide an immersive, user-centered experience for enjoying my music. I designed this app with simplicity, responsiveness, and user-first design principles in mind, letting you dive into my tracks seamlessly from any device.
+Welcome to my personal acoustic music app! This progressive web app (PWA) provides an immersive, responsive experience for listening to my guitar recordings. Designed with simplicity, fluid gestures, and mobile-first principles, it lets you stream and enjoy tracks seamlessly from any device.
+
+---
+
+## Live URL
+🎵 **[https://music.coreylawrence.me](https://music.coreylawrence.me)**
 
 ---
 
@@ -9,62 +14,37 @@ Welcome to my personal music app! This progressive web app is built to provide a
 
 ---
 
-## A Thoughtful, Streamlined Music Experience
+## Features & Highlights
 
-The Corey Lawrence Music Web App reflects my approach to crafting technology that’s genuinely user-friendly and intuitive. It's not just a music player—it's a direct connection to my work, where you can explore tracks like "Waubash Cannonball" and "Doc's Guitar" with ease. Every feature is carefully designed to enhance your listening experience, whether you're on mobile, tablet, or desktop.
+### 🎸 Acoustic Guitar Recordings
+- **Waubash Cannonball** (1:35)
+- **Windy & Warm** (2:19)
+- **Freight Train** (1:54)
+- **Cannonball Rag** (1:40)
+- **Doc's Guitar** (0:58)
 
-### Key Features:
+### 📱 Modern iOS PWA & UI Enhancements
+- **Seamless Edge-to-Edge Design**: Full `viewport-fit=cover` integration with safe-area insets (`env(safe-area-inset-top)` / `bottom`), blending the midnight blue gradient naturally under the iPhone notch, dynamic island, and home indicator bar.
+- **Fluid Bottom Sheet Drawer**: Custom bottom drawer for the tracklist with spring physics, touch swipe-down-to-close gesture, backdrop blur, and dual-pane layout on desktop/tablet.
+- **Animated Equalizer & Track Feedback**: Live visual wave indicator on the actively playing track.
+- **Precision Scrubber**: Full touch and pointer-drag scrubber with visual thumb scaling, real-time timestamp scrub preview, and glitch-free audio seeking.
+- **Shuffle & Repeat**: Full playback cycle modes (Repeat Off, Repeat All, Repeat One) and Fisher-Yates shuffle.
 
-- **Dynamic Song Menu**  
-  The song menu is dynamically generated, making it easy to update the playlist and explore my tracks without needing constant changes to the app's code.
-
-- **Interactive Progress Bar**  
-  A real-time progress bar keeps you engaged, letting you track playback and navigate within songs intuitively.
-
-- **Smooth Scrolling & Navigation**  
-  Smooth-scrolling adds to the immersive feel, allowing for natural, uninterrupted exploration.
-
-- **Media Session API Integration**  
-  Control playback from your device’s lock screen or notification center, so you can enjoy music without needing to be in the app.
-
-- **Responsive Design**  
-  Optimized across all devices, the app adapts effortlessly to various screen sizes, giving you a beautiful experience anywhere.
-
-- **Offline Availability**  
-  Built to function offline, the app ensures you can enjoy music even without an internet connection.
-
----
-
-## Getting Started
-
-1. Visit [coreylawrencemusic.duckdns.org](https://coreylawrencemusic.duckdns.org).
-2. Pick a song or hit play.
-3. Enjoy a curated music experience wherever you are.
+### 🎧 Audio Engine & Lock Screen Controls
+- **MediaSession API Integration**: Complete native lock screen, notification center, and CarPlay/headphone integration with high-resolution artwork, scrubbing position sync, and track navigation.
+- **Reliable iOS Background Playback**: Single robust audio pipeline with initial silent audio unlock to guarantee uninterrupted playback and background streaming.
+- **Offline PWA Capabilities**: Built with a dedicated Service Worker caching app shell and audio assets for offline listening.
 
 ---
 
 ## Technology Stack
-
-- **JavaScript:** Powers the dynamic features and smooth functionality of the player.
-- **HTML & CSS:** Ensures a clean, accessible layout across devices.
-- **Service Worker & Media Session API:** Supports offline functionality and intuitive media controls.
-
----
-
-## Designed with Purpose
-
-As with my other projects, this app embodies my commitment to creating technology that is as purposeful as it is user-friendly. The menu updates dynamically, using JavaScript to add new songs without requiring HTML adjustments. A swipe gesture opens and closes the menu, enhancing the overall experience.
-
-### Advanced Media Control
-
-With the Media Session API, the app offers playback control directly from your device's lock screen or notification center, letting you control the music seamlessly—wherever you are.
+- **JavaScript (ES6+)**: Custom reactive audio engine, pointer scrubber, and drawer gestures.
+- **HTML5 & CSS3**: Custom properties, glassmorphism (`backdrop-filter`), safe area insets, and responsive layout.
+- **Service Worker API**: Offline asset caching.
+- **MediaSession API**: Native OS media controls.
+- **Hosting & Infrastructure**: Self-hosted on Linux with Nginx reverse proxy and Cloudflare Tunnel (`cloudflared`) with zero-trust edge HTTPS.
 
 ---
 
-## Secure and Accessible
-
-Hosted securely on a private server with Nginx and SSL via Let’s Encrypt, the Corey Lawrence Music Web App is available 24/7 for a safe and uninterrupted music experience.
-
----
-
-Enjoy the music, and thanks for stopping by!
+## License
+Personal Project - © Corey Lawrence. All rights reserved.

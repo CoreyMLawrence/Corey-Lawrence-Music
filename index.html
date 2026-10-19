@@ -1,176 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="icon" href="./favicon.png" type="image/png" />
     <meta charset="UTF-8" />
-    <title>Corey Lawrence Music</title>
-    <link rel="stylesheet" href="styles.css" />
-    <meta name="theme-color" content="#163264" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1,
-    maximum-scale=1, user-scalable=no"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
-    <meta name="apple-mobile-web-app-standalone" content="yes" />
+    <title>Corey Lawrence Music</title>
+    
+    <!-- PWA & Apple Web App Meta -->
+    <link rel="icon" href="./favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" sizes="128x128" href="./icon-128.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="./icon-152.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="./icon-192.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="./icon-512.png" />
+    <link rel="manifest" href="./manifest.json" />
+    <meta name="theme-color" content="#163264" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-fullscreen" content="yes" />
-    <link rel="apple-touch-icon" sizes="128x128" href="icon.png" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Corey's Music" />
-    <meta name="apple-touch-startup-image" content="load.png" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="mobile-web-app-capable" content="yes" />
-
-    <script
-      src="https://unpkg.com/nosleep.js@0.12.0/dist/NoSleep.min.js"
-      async
-    ></script>
+    <meta name="apple-touch-startup-image" content="./load.png" />
+    <meta name="format-detection" content="telephone=no" />
+    
+    <link rel="stylesheet" href="styles.css" />
     <script defer src="script.js"></script>
   </head>
   <!-- Google tag (gtag.js) -->
-  <script
-    async
-    src="https://www.googletagmanager.com/gtag/js?id=G-HZM7R7RPG9"
-  ></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HZM7R7RPG9"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
-
     gtag('config', 'G-HZM7R7RPG9');
   </script>
   <body>
-    <!-- Arrow navigation -->
-    <a id="arrow-link">
-      <img id="image" src="down-arrow.png" alt="Navigation arrow" />
-    </a>
+    <!-- App Root Container -->
+    <div id="app" class="app-root">
+      <!-- Main Player View -->
+      <main class="player-container">
+        <!-- Artwork Card -->
+        <div class="artwork-card">
+          <img
+            id="albumArt"
+            class="album-art"
+            src="./album-art-1024.jpg"
+            alt="Corey Lawrence - Old-Time Guitar Recordings"
+            draggable="false"
+          />
+        </div>
 
-    <div id="page-content">
-      <div class="main-player">
-        <img
-          class="no-zoom"
-          id="album-art"
-          src="./album-art-1024.jpg"
-          alt="album art"
-        />
+        <!-- Track Information -->
+        <section class="meta-section">
+          <h1 id="songTitle" class="song-title">Waubash Cannonball</h1>
+          <p id="artistName" class="artist-name">Corey Lawrence</p>
+        </section>
 
-        <!-- Audio element -->
-        <audio
-          id="audioPlayer"
-          preload="auto"
-          poster="audio-poster.jpg"
-          crossorigin="anonymous"
-          playsinline
-          webkit-playsinline
-          x-webkit-airplay="allow"
-          style="display: none"
-        ></audio>
-
-        <div class="middle-area">
-          <!-- Title and artist -->
-          <h1 id="title">Waubash Cannonball</h1>
-          <h4 id="artist">Corey Lawrence</h4>
-
-          <!-- Progress bar -->
-          <div class="progress-container">
-            <div class="progress">
-              <div class="progress-bar" id="progressBar"></div>
+        <!-- Interactive Scrubber -->
+        <section class="scrubber-section" aria-label="Audio scrubber">
+          <div
+            id="progressContainer"
+            class="progress-hit-area"
+            role="slider"
+            tabindex="0"
+            aria-label="Seek track position"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+          >
+            <div class="progress-track" id="progressTrack">
+              <div class="progress-fill" id="progressBar"></div>
+              <div class="progress-thumb" id="progressThumb"></div>
             </div>
           </div>
+          <div class="timestamps" aria-live="off">
+            <span id="countUp" class="time-readout">0:00</span>
+            <span id="countDown" class="time-readout">-0:00</span>
+          </div>
+        </section>
 
-          <!-- Time display -->
-          <div class="time">
-            <div id="count-up">0:00</div>
-            <div id="count-down">-0:00</div>
+        <!-- Playback Controls -->
+        <nav class="controls-container" aria-label="Playback controls">
+          <button id="shuffleBtn" class="btn btn-mode" aria-label="Shuffle mode: Off" title="Shuffle">
+            <img src="./shuffle.png" alt="Shuffle" />
+            <span class="active-dot"></span>
+          </button>
+
+          <button id="skipBackBtn" class="btn btn-nav" aria-label="Previous track" title="Previous Track">
+            <img src="./skipback.png" alt="Previous Track" />
+          </button>
+
+          <button id="playPauseBtn" class="btn btn-play" aria-label="Play track" title="Play / Pause">
+            <img id="playPauseImg" src="./play.png" alt="Play" />
+          </button>
+
+          <button id="skipForwardBtn" class="btn btn-nav" aria-label="Next track" title="Next Track">
+            <img src="./skipforward.png" alt="Next Track" />
+          </button>
+
+          <button id="repeatBtn" class="btn btn-mode" aria-label="Repeat mode: Off" title="Repeat">
+            <img src="./repeat.png" alt="Repeat" />
+            <span class="active-dot"></span>
+          </button>
+        </nav>
+
+        <!-- Bottom Sheet Drawer Toggle -->
+        <div class="drawer-trigger-wrapper">
+          <button id="drawerToggleBtn" class="drawer-toggle-btn" aria-label="Toggle song list drawer" aria-expanded="false">
+            <span class="drawer-toggle-label">Tracks</span>
+            <svg id="drawerChevron" class="drawer-chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+          </button>
+        </div>
+      </main>
+
+      <!-- Drawer Dimmer / Backdrop -->
+      <div id="drawerBackdrop" class="drawer-backdrop" aria-hidden="true"></div>
+
+      <!-- Sliding Song Drawer / Bottom Sheet -->
+      <aside id="songDrawer" class="song-drawer" aria-label="Song list" aria-hidden="true">
+        <!-- Pull Handle Area for Drag Gestures -->
+        <div id="drawerPullBar" class="drawer-pull-bar">
+          <div class="drawer-grab-pill"></div>
+        </div>
+
+        <div class="drawer-content">
+          <div class="drawer-header">
+            <h2 class="drawer-title">Tracklist</h2>
+            <span class="drawer-subtitle">5 Acoustic Guitar Tracks</span>
           </div>
 
-          <!-- Player controls -->
-          <div class="controls">
-            <!-- Skip back button -->
-            <button class="control-button skip-button" id="skipBackButton">
-              <img
-                class="no-zoom"
-                style="height: 2.2em"
-                src="./skipback.png"
-                alt="Previous Track"
-              />
-            </button>
-
-            <!-- Play/Pause button -->
-            <button class="control-button play-button" id="playPauseButton">
-              <img
-                class="no-zoom"
-                id="playPauseImg"
-                style="height: 6em"
-                src="play.png"
-                alt="Play/Pause"
-              />
-            </button>
-
-            <!-- Skip forward button -->
-            <button class="control-button skip-button" id="skipForwardButton">
-              <img
-                class="no-zoom"
-                style="height: 2.2em"
-                src="./skipforward.png"
-                alt="Next Track"
-              />
-            </button>
+          <div class="song-list" id="songList">
+            <!-- Dynamically populated with active state indicators -->
           </div>
         </div>
-      </div>
+      </aside>
 
-      <!-- Song list -->
-      <div id="song-drawer"></div>
-      <div id="song-area">
-        <!-- Waubash Cannonball -->
-        <a id="waubash-song" href="#" class="song">
-          <p style="float: left">Waubash Cannonball</p>
-          <p style="float: right">1:35</p>
-        </a>
-        <div class="separator"></div>
-
-        <!-- Windy & Warm -->
-        <a id="windyandwarm-song" href="#" class="song">
-          <p style="float: left">Windy & Warm</p>
-          <p style="float: right">2:19</p>
-        </a>
-        <div class="separator"></div>
-
-        <!-- Freight Train -->
-        <a id="freighttrain-song" href="#" class="song">
-          <p style="float: left">Freight Train</p>
-          <p style="float: right">1:54</p>
-        </a>
-        <div class="separator"></div>
-
-        <!-- Cannonball Rag -->
-        <a id="cannonballrag-song" href="#" class="song">
-          <p style="float: left">Cannonball Rag</p>
-          <p style="float: right">1:40</p>
-        </a>
-        <div class="separator"></div>
-
-        <!-- Doc's Guitar -->
-        <a id="docsguitar-song" href="#" class="song">
-          <p style="float: left">Doc's Guitar</p>
-          <p style="float: right">0:58</p>
-        </a>
-      </div>
+      <!-- Native Audio Element -->
+      <audio
+        id="audioPlayer"
+        preload="auto"
+        playsinline
+        webkit-playsinline
+      ></audio>
     </div>
 
-    <!-- Register Service Worker -->
+    <!-- Service Worker Registration -->
     <script>
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker
-          .register('/service-worker.js', { scope: '/' })
-          .then((reg) => {
-            console.log('Service Worker registered successfully', reg);
-          })
-          .catch((error) => {
-            console.warn('Service Worker registration failed', error);
-          });
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./service-worker.js', { scope: './' })
+            .catch(err => console.warn('Service worker registration failed:', err));
+        });
       }
     </script>
   </body>
