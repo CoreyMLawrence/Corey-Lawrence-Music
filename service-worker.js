@@ -1,10 +1,11 @@
-const CACHE_NAME = 'corey-music-cache-v7';
+const CACHE_NAME = 'corey-music-cache-v9';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './styles.css',
   './script.js',
   './manifest.json',
+  './down-arrow.png',
   './album-art-1024.jpg',
   './album-art-512.jpg',
   './album-art-256.jpg',

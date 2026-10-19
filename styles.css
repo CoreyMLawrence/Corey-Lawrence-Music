@@ -21,13 +21,14 @@
 
 /* Notch & Safe Area Tint */
 html {
+  background: linear-gradient(180deg, #163264 0%, #112850 45%, #081224 100%);
   background-color: #163264;
   height: 100%;
   overflow: hidden;
 }
 
 body {
-  background: linear-gradient(180deg, #163264 0%, #112850 50%, #0c1a34 100%);
+  background: linear-gradient(180deg, #163264 0%, #112850 45%, #081224 100%);
   background-attachment: fixed;
   background-size: cover;
   background-color: #163264;
@@ -76,15 +77,38 @@ a {
   right: 0;
   bottom: 0;
   overflow: hidden;
-  background: linear-gradient(180deg, #163264 0%, #112850 50%, #0c1a34 100%);
+  background: linear-gradient(180deg, #163264 0%, #112850 45%, #081224 100%);
   background-color: #163264;
+}
+
+/* Safari Notch and Bottom Bar Tint Anchors */
+.notch-tint {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: max(2.5rem, env(safe-area-inset-top));
+  background-color: #163264;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.bottom-tint {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: max(2rem, calc(env(safe-area-inset-bottom) + 0.75rem));
+  background-color: #081224;
+  pointer-events: none;
+  z-index: 50;
 }
 
 /* ==========================================================================
    Main Player (Foreground - Curtain that slides up to reveal queue)
    ========================================================================== */
 .main-player {
-  background: linear-gradient(180deg, #163264 0%, #112850 50%, #0c1a34 100%);
+  background: linear-gradient(180deg, #163264 0%, #112850 45%, #081224 100%);
   background-attachment: fixed;
   background-size: cover;
   background-color: #163264;
@@ -96,13 +120,13 @@ a {
   left: 0;
   right: 0;
   bottom: 0;
-  padding-top: max(1.5rem, calc(env(safe-area-inset-top) + 0.5rem));
+  padding-top: max(2.75rem, calc(env(safe-area-inset-top) + 0.35rem));
   padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  z-index: 2;
+  justify-content: flex-start;
+  z-index: 20;
   transition: transform 0.44s cubic-bezier(0.25, 1, 0.5, 1);
   will-change: transform;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
@@ -114,50 +138,52 @@ a {
 }
 
 /* ==========================================================================
-   Main Player Column (Max width 24rem)
+   Main Player Column (Expanded edge-to-edge with slight margin)
    ========================================================================== */
 .player-content {
   width: 100%;
-  max-width: 24rem;
-  padding: 0 1.5rem;
+  max-width: 28rem;
+  padding: 0 1.25rem;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  flex-grow: 1;
-  justify-content: space-between;
-  margin-bottom: 0.25rem;
+  flex-shrink: 0;
 }
 
-/* Large Album Art (Expanded to fill available space) */
+/* Large Album Art (Expanded to edges with slight margin) */
 .artwork-container {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-grow: 1;
-  min-height: 0;
-  margin: 0.25rem 0 0.5rem 0;
+  margin-top: 0.25rem;
+  margin-bottom: 1.25rem;
 }
 
 #album-art {
   width: 100%;
-  max-width: 22rem;
-  max-height: 48svh;
+  max-width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
-  border-radius: 10px;
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.65), 0 0 24px rgba(22, 50, 100, 0.35);
   pointer-events: none;
   flex-shrink: 0;
   transition: transform 0.35s ease;
 }
 
-/* Controls Group (Grouped down close to the bottom arrow) */
-.bottom-controls-group {
+/* Controls Group (Positioned close to album art) */
+.player-controls-group {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  flex-shrink: 0;
+  width: 100%;
+}
+
+/* Spacer that pushes open space to bottom */
+.bottom-spacer {
+  flex-grow: 1;
+  width: 100%;
+  min-height: 1rem;
 }
 
 /* ==========================================================================
@@ -168,6 +194,7 @@ a {
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  margin-bottom: 0.85rem;
 }
 
 .track-text {
@@ -233,6 +260,7 @@ a {
    ========================================================================== */
 .progress-section {
   width: 100%;
+  margin-bottom: 0.85rem;
 }
 
 .progress-container {
@@ -366,26 +394,31 @@ a {
    Little Shallow Arrow (Positioned at bottom always, flips vertically)
    ========================================================================== */
 #arrow-link {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding: 0.4rem 0 0.25rem 0;
-  margin-bottom: max(0.25rem, env(safe-area-inset-bottom));
+  padding-top: 0.5rem;
+  padding-bottom: max(1.1rem, calc(env(safe-area-inset-bottom) + 0.6rem));
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  flex-shrink: 0;
+  z-index: 150;
 }
 
 #image {
-  width: 36px;
+  width: 38px;
   height: auto;
   pointer-events: none;
   transition: transform 0.28s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* Flips vertically without spinning! */
-.main-player.drawer-open #image {
+.main-player.drawer-open ~ #arrow-link #image,
+#arrow-link.open #image {
   transform: scaleY(-1);
 }
 
@@ -398,16 +431,16 @@ a {
   left: 0;
   right: 0;
   height: 26.5rem;
-  background-color: #0c1a34;
-  z-index: 1;
+  background-color: #081224;
+  z-index: 5;
   display: flex;
   flex-direction: column;
-  padding: 1rem 1.5rem max(2rem, env(safe-area-inset-bottom)) 1.5rem;
+  padding: 1rem 1.5rem max(3.5rem, calc(env(safe-area-inset-bottom) + 3rem)) 1.5rem;
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease, visibility 0.25s ease;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .main-player.drawer-open ~ #song-area,
@@ -527,8 +560,11 @@ a {
    Tablet & Desktop Layout (iPad 2-Column Mode)
    ========================================================================== */
 @media only screen and (min-width: 668px) {
-  #arrow-link {
-    display: none;
+  .notch-tint,
+  .bottom-tint,
+  #arrow-link,
+  .bottom-spacer {
+    display: none !important;
   }
 
   body {

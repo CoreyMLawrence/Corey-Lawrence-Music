@@ -465,6 +465,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (DOM.songArea) {
         DOM.songArea.classList.add('open');
       }
+      if (DOM.arrowLink) {
+        DOM.arrowLink.classList.add('open');
+      }
     }
 
     close() {
@@ -472,6 +475,9 @@ document.addEventListener('DOMContentLoaded', () => {
       DOM.mainPlayer.classList.remove('drawer-open');
       if (DOM.songArea) {
         DOM.songArea.classList.remove('open');
+      }
+      if (DOM.arrowLink) {
+        DOM.arrowLink.classList.remove('open');
       }
     }
   }

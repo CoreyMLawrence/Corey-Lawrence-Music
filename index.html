@@ -8,7 +8,7 @@
     />
     <title>Corey Lawrence Music</title>
     <link rel="icon" href="./favicon.png" type="image/png" />
-    <link rel="stylesheet" href="styles.css?v=7.0" />
+    <link rel="stylesheet" href="styles.css?v=9.0" />
     <meta name="theme-color" content="#163264" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -21,7 +21,7 @@
     <meta name="apple-touch-startup-image" content="load.png" />
     <meta name="mobile-web-app-capable" content="yes" />
 
-    <script defer src="script.js?v=7.0"></script>
+    <script defer src="script.js?v=9.0"></script>
   </head>
   <!-- Google tag (gtag.js) -->
   <script
@@ -38,6 +38,9 @@
   </script>
   <body>
     <div id="page-content">
+      <!-- Safari Notch Area Tint Anchor -->
+      <div class="notch-tint"></div>
+
       <!-- Main Player View (Slides up like a curtain to reveal queue underneath) -->
       <div class="main-player" id="mainPlayer">
         <!-- Hidden Native Audio Element -->
@@ -52,7 +55,7 @@
           style="display: none"
         ></audio>
 
-        <!-- Main Column -->
+        <!-- Main Column (Artwork and controls close together near top safe area) -->
         <div class="player-content">
           <!-- Large Album Artwork -->
           <div class="artwork-container">
@@ -65,8 +68,8 @@
             />
           </div>
 
-          <!-- Bottom Controls Section (Grouped closer to bottom arrow) -->
-          <div class="bottom-controls-group">
+          <!-- Controls Section (Grouped cohesively below album) -->
+          <div class="player-controls-group">
             <!-- Track Info Row: Title & Artist on Left, Favorite on Right -->
             <div class="track-info-row">
               <div class="track-text">
@@ -136,17 +139,20 @@
           </div>
         </div>
 
-        <!-- Little Shallow Arrow at Bottom (Flips when drawer is open) -->
-        <a id="arrow-link" role="button" aria-label="Toggle track list" tabindex="0">
-          <img
-            id="image"
-            class="no-zoom"
-            src="down-arrow.png"
-            alt="Toggle track list"
-            draggable="false"
-          />
-        </a>
+        <!-- Generous breathing space below controls -->
+        <div class="bottom-spacer"></div>
       </div>
+
+      <!-- Little Shallow Arrow at Bottom (Anchored at very bottom always, flips vertically) -->
+      <a id="arrow-link" role="button" aria-label="Toggle track list" tabindex="0">
+        <img
+          id="image"
+          class="no-zoom"
+          src="down-arrow.png"
+          alt="Toggle track list"
+          draggable="false"
+        />
+      </a>
 
       <!-- Song Area (Stationed BEHIND the main player - Spotify Queue Layout) -->
       <div id="song-area">
@@ -220,6 +226,9 @@
           </div>
         </div>
       </div>
+
+      <!-- Safari Bottom URL Bar Tint Anchor -->
+      <div class="bottom-tint"></div>
     </div>
 
     <!-- Service Worker Registration -->
