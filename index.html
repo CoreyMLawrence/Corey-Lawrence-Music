@@ -7,7 +7,7 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
     <title>Corey Lawrence Music</title>
-    
+
     <!-- PWA & Apple Web App Meta -->
     <link rel="icon" href="./favicon.png" type="image/png" />
     <link rel="apple-touch-icon" sizes="128x128" href="./icon-128.png" />
@@ -21,9 +21,9 @@
     <meta name="apple-mobile-web-app-title" content="Corey's Music" />
     <meta name="apple-touch-startup-image" content="./load.png" />
     <meta name="format-detection" content="telephone=no" />
-    
-    <link rel="stylesheet" href="styles.css" />
-    <script defer src="script.js"></script>
+
+    <link rel="stylesheet" href="styles.css?v=3.0" />
+    <script defer src="script.js?v=3.0"></script>
   </head>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-HZM7R7RPG9"></script>
@@ -34,109 +34,112 @@
     gtag('config', 'G-HZM7R7RPG9');
   </script>
   <body>
-    <!-- App Root Container -->
-    <div id="app" class="app-root">
+    <!-- App Container -->
+    <div id="page-content">
       <!-- Main Player View -->
-      <main class="player-container">
-        <!-- Artwork Card -->
-        <div class="artwork-card">
+      <main class="main-player">
+        <!-- Album Art -->
+        <div class="artwork-container">
           <img
-            id="albumArt"
-            class="album-art"
+            id="album-art"
             src="./album-art-1024.jpg"
-            alt="Corey Lawrence - Old-Time Guitar Recordings"
+            alt="Old-Time Couch Recordings - Corey Lawrence"
             draggable="false"
           />
         </div>
 
-        <!-- Track Information -->
-        <section class="meta-section">
-          <h1 id="songTitle" class="song-title">Waubash Cannonball</h1>
-          <p id="artistName" class="artist-name">Corey Lawrence</p>
-        </section>
+        <!-- Middle Area: Title, Artist, Scrubber, Controls -->
+        <div class="middle-area">
+          <h1 id="title">Waubash Cannonball</h1>
+          <h4 id="artist">Corey Lawrence</h4>
 
-        <!-- Interactive Scrubber -->
-        <section class="scrubber-section" aria-label="Audio scrubber">
+          <!-- Progress / Scrubber Section -->
           <div
+            class="progress-container"
             id="progressContainer"
-            class="progress-hit-area"
             role="slider"
             tabindex="0"
-            aria-label="Seek track position"
+            aria-label="Seek position"
             aria-valuemin="0"
             aria-valuemax="100"
             aria-valuenow="0"
           >
-            <div class="progress-track" id="progressTrack">
-              <div class="progress-fill" id="progressBar"></div>
+            <div class="progress" id="progressTrack">
+              <div class="progress-bar" id="progressBar"></div>
               <div class="progress-thumb" id="progressThumb"></div>
             </div>
           </div>
-          <div class="timestamps" aria-live="off">
-            <span id="countUp" class="time-readout">0:00</span>
-            <span id="countDown" class="time-readout">-0:00</span>
+
+          <!-- Time Display -->
+          <div class="time">
+            <span id="count-up">0:00</span>
+            <span id="count-down">-0:00</span>
           </div>
-        </section>
 
-        <!-- Playback Controls -->
-        <nav class="controls-container" aria-label="Playback controls">
-          <button id="shuffleBtn" class="btn btn-mode" aria-label="Shuffle mode: Off" title="Shuffle">
-            <img src="./shuffle.png" alt="Shuffle" />
-            <span class="active-dot"></span>
-          </button>
+          <!-- Controls -->
+          <div class="controls">
+            <button class="control-button skip-button" id="skipBackButton" aria-label="Previous Track">
+              <img src="./skipback.png" alt="Previous Track" />
+            </button>
 
-          <button id="skipBackBtn" class="btn btn-nav" aria-label="Previous track" title="Previous Track">
-            <img src="./skipback.png" alt="Previous Track" />
-          </button>
+            <button class="control-button play-button" id="playPauseButton" aria-label="Play Track">
+              <img id="playPauseImg" src="./play.png" alt="Play / Pause" />
+            </button>
 
-          <button id="playPauseBtn" class="btn btn-play" aria-label="Play track" title="Play / Pause">
-            <img id="playPauseImg" src="./play.png" alt="Play" />
-          </button>
-
-          <button id="skipForwardBtn" class="btn btn-nav" aria-label="Next track" title="Next Track">
-            <img src="./skipforward.png" alt="Next Track" />
-          </button>
-
-          <button id="repeatBtn" class="btn btn-mode" aria-label="Repeat mode: Off" title="Repeat">
-            <img src="./repeat.png" alt="Repeat" />
-            <span class="active-dot"></span>
-          </button>
-        </nav>
-
-        <!-- Bottom Sheet Drawer Toggle -->
-        <div class="drawer-trigger-wrapper">
-          <button id="drawerToggleBtn" class="drawer-toggle-btn" aria-label="Toggle song list drawer" aria-expanded="false">
-            <span class="drawer-toggle-label">Tracks</span>
-            <svg id="drawerChevron" class="drawer-chevron" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="18 15 12 9 6 15"></polyline>
-            </svg>
-          </button>
+            <button class="control-button skip-button" id="skipForwardButton" aria-label="Next Track">
+              <img src="./skipforward.png" alt="Next Track" />
+            </button>
+          </div>
         </div>
+
+        <!-- Arrow Navigation Button to toggle drawer -->
+        <button id="arrow-link" aria-label="Toggle song list" aria-expanded="false">
+          <img id="image" src="./down-arrow.png" alt="Navigation arrow" />
+        </button>
       </main>
 
-      <!-- Drawer Dimmer / Backdrop -->
-      <div id="drawerBackdrop" class="drawer-backdrop" aria-hidden="true"></div>
+      <!-- Drawer Backdrop (dimmer on mobile) -->
+      <div id="drawer-backdrop" class="drawer-backdrop" aria-hidden="true"></div>
 
-      <!-- Sliding Song Drawer / Bottom Sheet -->
-      <aside id="songDrawer" class="song-drawer" aria-label="Song list" aria-hidden="true">
-        <!-- Pull Handle Area for Drag Gestures -->
-        <div id="drawerPullBar" class="drawer-pull-bar">
-          <div class="drawer-grab-pill"></div>
+      <!-- Song Area / Drawer -->
+      <section id="song-area" aria-label="Tracklist">
+        <div class="drawer-handle" id="drawerHandle">
+          <div class="handle-bar"></div>
         </div>
 
-        <div class="drawer-content">
-          <div class="drawer-header">
-            <h2 class="drawer-title">Tracklist</h2>
-            <span class="drawer-subtitle">5 Acoustic Guitar Tracks</span>
+        <div class="song-list-scroll">
+          <div class="song playing" id="waubash-song" role="button" tabindex="0" data-index="0">
+            <p class="song-title">Waubash Cannonball</p>
+            <p class="song-time">1:35</p>
           </div>
+          <div class="separator"></div>
 
-          <div class="song-list" id="songList">
-            <!-- Dynamically populated with active state indicators -->
+          <div class="song" id="windyandwarm-song" role="button" tabindex="0" data-index="1">
+            <p class="song-title">Windy & Warm</p>
+            <p class="song-time">2:19</p>
+          </div>
+          <div class="separator"></div>
+
+          <div class="song" id="freighttrain-song" role="button" tabindex="0" data-index="2">
+            <p class="song-title">Freight Train</p>
+            <p class="song-time">1:54</p>
+          </div>
+          <div class="separator"></div>
+
+          <div class="song" id="cannonballrag-song" role="button" tabindex="0" data-index="3">
+            <p class="song-title">Cannonball Rag</p>
+            <p class="song-time">1:40</p>
+          </div>
+          <div class="separator"></div>
+
+          <div class="song" id="docsguitar-song" role="button" tabindex="0" data-index="4">
+            <p class="song-title">Doc's Guitar</p>
+            <p class="song-time">0:58</p>
           </div>
         </div>
-      </aside>
+      </section>
 
-      <!-- Native Audio Element -->
+      <!-- Audio Element -->
       <audio
         id="audioPlayer"
         preload="auto"
@@ -150,7 +153,7 @@
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('./service-worker.js', { scope: './' })
-            .catch(err => console.warn('Service worker registration failed:', err));
+            .catch(err => console.warn('SW failed:', err));
         });
       }
     </script>
