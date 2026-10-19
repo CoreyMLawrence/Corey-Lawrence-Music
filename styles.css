@@ -19,16 +19,14 @@
   scrollbar-width: none;
 }
 
-/* Notch & Safe Area Tint */
 html {
-  background: linear-gradient(180deg, #163264 0%, #112850 45%, #081224 100%);
   background-color: #163264;
   height: 100%;
   overflow: hidden;
 }
 
 body {
-  background: linear-gradient(180deg, #163264 0%, #112850 45%, #081224 100%);
+  background: linear-gradient(180deg, #163264 0%, #112850 45%, #163264 100%);
   background-attachment: fixed;
   background-size: cover;
   background-color: #163264;
@@ -77,38 +75,15 @@ a {
   right: 0;
   bottom: 0;
   overflow: hidden;
-  background: linear-gradient(180deg, #163264 0%, #112850 45%, #081224 100%);
+  background: linear-gradient(180deg, #163264 0%, #112850 45%, #163264 100%);
   background-color: #163264;
-}
-
-/* Safari Notch and Bottom Bar Tint Anchors */
-.notch-tint {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: max(2.5rem, env(safe-area-inset-top));
-  background-color: #163264;
-  pointer-events: none;
-  z-index: 50;
-}
-
-.bottom-tint {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: max(2rem, calc(env(safe-area-inset-bottom) + 0.75rem));
-  background-color: #081224;
-  pointer-events: none;
-  z-index: 50;
 }
 
 /* ==========================================================================
    Main Player (Foreground - Curtain that slides up to reveal queue)
    ========================================================================== */
 .main-player {
-  background: linear-gradient(180deg, #163264 0%, #112850 45%, #081224 100%);
+  background: linear-gradient(180deg, #163264 0%, #112850 45%, #163264 100%);
   background-attachment: fixed;
   background-size: cover;
   background-color: #163264;
@@ -120,7 +95,7 @@ a {
   left: 0;
   right: 0;
   bottom: 0;
-  padding-top: max(2.75rem, calc(env(safe-area-inset-top) + 0.35rem));
+  padding-top: max(2.5rem, calc(env(safe-area-inset-top) + 0.25rem));
   padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
@@ -138,34 +113,33 @@ a {
 }
 
 /* ==========================================================================
-   Main Player Column (Expanded edge-to-edge with slight margin)
+   Main Player Column — edge-to-edge width with small 1rem side margins
    ========================================================================== */
 .player-content {
   width: 100%;
-  max-width: 28rem;
-  padding: 0 1.25rem;
+  max-width: 32rem;
+  padding: 0 1rem;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   flex-shrink: 0;
 }
 
-/* Large Album Art (Expanded to edges with slight margin) */
+/* Large Album Art — fits the full width with a slight 1rem margin */
 .artwork-container {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 0.25rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
 }
 
 #album-art {
   width: 100%;
-  max-width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 14px;
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.65), 0 0 24px rgba(22, 50, 100, 0.35);
   pointer-events: none;
   flex-shrink: 0;
@@ -560,8 +534,6 @@ a {
    Tablet & Desktop Layout (iPad 2-Column Mode)
    ========================================================================== */
 @media only screen and (min-width: 668px) {
-  .notch-tint,
-  .bottom-tint,
   #arrow-link,
   .bottom-spacer {
     display: none !important;
@@ -636,11 +608,6 @@ a {
 
 /* Small Screens */
 @media only screen and (max-height: 680px) and (max-width: 480px) {
-  #album-art {
-    max-width: 16rem;
-    max-height: 38svh;
-  }
-
   #title {
     font-size: 1.25rem;
   }

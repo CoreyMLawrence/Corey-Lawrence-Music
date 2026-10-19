@@ -1,4 +1,5 @@
-const CACHE_NAME = 'corey-music-cache-v9';
+// Service Worker with Network-First strategy for assets to ensure updates are always instant
+const CACHE_NAME = 'corey-music-cache-v11';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -10,24 +11,8 @@ const ASSETS_TO_CACHE = [
   './album-art-512.jpg',
   './album-art-256.jpg',
   './album-art-128.jpg',
-  './play.png',
-  './pause.png',
-  './skipback.png',
-  './skipforward.png',
-  './shuffle.png',
-  './repeat.png',
   './favicon.png',
   './icon.png',
-  './icon-48.png',
-  './icon-72.png',
-  './icon-96.png',
-  './icon-128.png',
-  './icon-144.png',
-  './icon-152.png',
-  './icon-192.png',
-  './icon-256.png',
-  './icon-384.png',
-  './icon-512.png',
   './waubash.aac',
   './windy-and-warm.aac',
   './freight-train.aac',
@@ -50,39 +35,48 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(
-        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+        keys.map((key) => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
       )
     ).then(() => self.clients.claim())
   );
 });
 
+// Network-first for CSS, JS, HTML; Cache-first for audio files and images
 self.addEventListener('fetch', (event) => {
-  // Only handle GET requests
   if (event.request.method !== 'GET') return;
 
-  event.respondWith(
-    caches.match(event.request, { ignoreSearch: true }).then((cachedResponse) => {
-      // Return cached version or fetch from network
-      if (cachedResponse) {
-        return cachedResponse;
-      }
+  const url = new URL(event.request.url);
+  const isMedia = url.pathname.endsWith('.aac') || url.pathname.endsWith('.jpg') || url.pathname.endsWith('.png');
 
-      return fetch(event.request).then((networkResponse) => {
-        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
-          return networkResponse;
-        }
-
-        const toCache = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, toCache);
+  if (isMedia) {
+    // Cache first for media files
+    event.respondWith(
+      caches.match(event.request).then((cached) => {
+        return cached || fetch(event.request).then((resp) => {
+          if (resp && resp.status === 200) {
+            const clone = resp.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          }
+          return resp;
         });
-
-        return networkResponse;
-      }).catch(() => {
-        if (event.request.headers.get('accept')?.includes('text/html')) {
-          return caches.match('./index.html');
+      })
+    );
+  } else {
+    // Network first for HTML, CSS, JS so changes are seen immediately
+    event.respondWith(
+      fetch(event.request).then((resp) => {
+        if (resp && resp.status === 200) {
+          const clone = resp.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
         }
-      });
-    })
-  );
+        return resp;
+      }).catch(() => {
+        return caches.match(event.request);
+      })
+    );
+  }
 });
