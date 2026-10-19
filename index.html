@@ -17,7 +17,7 @@
     <link rel="apple-touch-icon" sizes="152x152" href="icon-152.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
-    <link rel="manifest" href="manifest.json" />
+    <link rel="manifest" href="manifest.json?v=13.0" />
     <meta name="apple-touch-startup-image" content="load.png" />
     <meta name="mobile-web-app-capable" content="yes" />
 
@@ -225,18 +225,100 @@
       </div>
     </div>
 
-    <!-- Nuke old service workers and caches so fresh CSS/JS is always loaded -->
+    <!-- PWA Manifest Versioning & Automatic Update System -->
     <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(regs) {
-          for (var i = 0; i < regs.length; i++) { regs[i].unregister(); }
+      (function() {
+        const CURRENT_VERSION = '13.0';
+
+        // Check manifest version and force PWA update when a new version is detected
+        async function checkPwaVersion() {
+          try {
+            const res = await fetch('./manifest.json?t=' + Date.now(), { cache: 'no-store' });
+            if (!res.ok) return;
+            const manifest = await res.json();
+            const serverVersion = manifest.version || CURRENT_VERSION;
+            const storedVersion = localStorage.getItem('pwa_version');
+
+            if (storedVersion && storedVersion !== serverVersion) {
+              console.log('[PWA] Newer version detected in manifest:', serverVersion, '(active:', storedVersion, ')');
+              localStorage.setItem('pwa_version', serverVersion);
+
+              // Clear all caches so stale assets are immediately purged
+              if ('caches' in window) {
+                const cacheNames = await caches.keys();
+                await Promise.all(cacheNames.map(name => caches.delete(name)));
+              }
+
+              // Update service worker
+              if ('serviceWorker' in navigator) {
+                const reg = await navigator.serviceWorker.getRegistration();
+                if (reg) {
+                  await reg.update();
+                }
+              }
+
+              // Reload immediately unless music is actively playing
+              const audio = document.getElementById('audioPlayer');
+              const isPlaying = audio && !audio.paused && audio.currentTime > 0;
+              if (!isPlaying) {
+                window.location.reload();
+              } else {
+                audio.addEventListener('pause', () => window.location.reload(), { once: true });
+                audio.addEventListener('ended', () => window.location.reload(), { once: true });
+              }
+              return;
+            }
+
+            if (!storedVersion) {
+              localStorage.setItem('pwa_version', serverVersion);
+            }
+          } catch (err) {
+            console.warn('[PWA] Version check notice:', err);
+          }
+        }
+
+        // Register Service Worker with update listeners
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker
+              .register('./service-worker.js?v=' + CURRENT_VERSION, { scope: './' })
+              .then((registration) => {
+                registration.update();
+                registration.addEventListener('updatefound', () => {
+                  const newWorker = registration.installing;
+                  if (newWorker) {
+                    newWorker.addEventListener('statechange', () => {
+                      if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        console.log('[PWA] New service worker installed, reloading to apply...');
+                        window.location.reload();
+                      }
+                    });
+                  }
+                });
+              })
+              .catch((err) => console.warn('[PWA] SW register error:', err));
+
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+              if (!refreshing) {
+                refreshing = true;
+                window.location.reload();
+              }
+            });
+          });
+        }
+
+        // Check version on load and whenever app returns to foreground (e.g. reopening PWA from iOS home screen)
+        checkPwaVersion();
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'visible') {
+            checkPwaVersion();
+            if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.getRegistration().then(reg => reg && reg.update());
+            }
+          }
         });
-      }
-      if ('caches' in window) {
-        caches.keys().then(function(names) {
-          for (var i = 0; i < names.length; i++) { caches.delete(names[i]); }
-        });
-      }
+      })();
     </script>
   </body>
 </html>

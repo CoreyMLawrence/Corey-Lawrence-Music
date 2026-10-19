@@ -1,6 +1,8 @@
 {
   "name": "Corey Lawrence Music",
   "short_name": "Corey's Music",
+  "version": "13.0",
+  "id": "corey-lawrence-music-pwa",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
