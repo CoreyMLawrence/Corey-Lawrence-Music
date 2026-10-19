@@ -1,4 +1,4 @@
-/* Corey Lawrence Music - Authentic & Polished Stylesheet */
+/* Corey Lawrence Music - Spotify-Inspired Design System */
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -15,24 +15,27 @@
   display: none;
 }
 
+* {
+  scrollbar-width: none;
+}
+
 html {
-  background-color: #102449;
+  background-color: #081224;
   height: 100%;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  overflow: hidden;
 }
 
 body {
-  background: linear-gradient(180deg, #19386d 0%, #163264 45%, #102449 100%);
+  background: linear-gradient(180deg, #1b3d75 0%, #163264 35%, #0d1e3d 70%, #081224 100%);
   background-attachment: fixed;
   background-size: cover;
-  background-color: #102449;
+  background-color: #081224;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 0 auto;
-  color: white;
-  font-family: -apple-system, BlinkMacSystemFont, 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Circular Std', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   width: 100%;
   height: 100%;
   min-height: 100vh;
@@ -55,7 +58,6 @@ a {
   text-decoration: none;
   color: inherit;
   font-style: normal;
-  font-weight: lighter;
 }
 
 #page-content {
@@ -73,31 +75,18 @@ a {
   right: 0;
   bottom: 0;
   overflow: hidden;
-  background: linear-gradient(180deg, #19386d 0%, #163264 45%, #102449 100%);
-  background-color: #102449;
+  background: linear-gradient(180deg, #1b3d75 0%, #163264 35%, #0d1e3d 70%, #081224 100%);
+  background-color: #081224;
 }
 
-/* Album Art - Strictly 1:1 proportional square, no zoom clipping */
-#album-art {
-  width: min(78vw, 38vh, 38svh, 21em);
-  height: min(78vw, 38vh, 38svh, 21em);
-  aspect-ratio: 1 / 1;
-  object-fit: contain;
-  border-radius: 1.75em;
-  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.55), 0 0 20px rgba(22, 50, 100, 0.35);
-  pointer-events: none;
-  flex-shrink: 0;
-  margin-top: 0.25em;
-  margin-bottom: 0.25em;
-  transition: transform 0.35s ease;
-}
-
-/* Main Player (Foreground - Spans full screen and slides up to reveal drawer behind) */
+/* ==========================================================================
+   Main Player (Foreground - Spotify Now Playing Screen)
+   ========================================================================== */
 .main-player {
-  background: linear-gradient(180deg, #19386d 0%, #163264 45%, #102449 100%);
+  background: linear-gradient(180deg, #1b3d75 0%, #163264 35%, #0d1e3d 70%, #081224 100%);
   background-attachment: fixed;
   background-size: cover;
-  background-color: #102449;
+  background-color: #081224;
   width: 100%;
   height: 100%;
   min-height: 100%;
@@ -106,193 +95,342 @@ a {
   left: 0;
   right: 0;
   bottom: 0;
-  padding-top: max(2.5em, calc(env(safe-area-inset-top) + 0.75em));
-  padding-bottom: max(1.75em, calc(env(safe-area-inset-bottom) + 0.75em));
+  padding-top: max(2.5rem, calc(env(safe-area-inset-top) + 0.5rem));
+  padding-bottom: max(1.5rem, calc(env(safe-area-inset-bottom) + 0.5rem));
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   z-index: 2;
-  transition: transform 0.42s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: transform 0.44s cubic-bezier(0.25, 1, 0.5, 1);
   will-change: transform;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
 }
 
-/* When the drawer is opened, the player slides up */
+/* Curtain Open: Slides up to reveal the queue stationed behind */
 .main-player.drawer-open {
-  transform: translateY(-21.5em);
+  transform: translateY(-26.5rem);
 }
 
-.middle-area {
-  text-align: center;
-  margin: 0 4vw;
+/* ==========================================================================
+   Top Header (Spotify Now Playing Header)
+   ========================================================================== */
+.top-bar {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 24em;
+  padding: 0 1.5rem;
+  height: 2.75rem;
   flex-shrink: 0;
 }
 
-#title {
-  font-size: 1.9em;
+.top-context {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.context-label {
+  font-size: 0.68rem;
   font-weight: 700;
-  text-align: center;
-  color: white;
-  margin-top: 0.1em;
-  margin-bottom: 0.1em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
 }
 
-#artist {
-  filter: opacity(70%);
-  margin-top: 0.2em;
-  margin-bottom: 0.4em;
-  font-size: 1.05em;
-  font-weight: lighter;
-  text-align: center;
+.context-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-top: 1px;
 }
 
-/* Scrubber */
-.progress-container {
-  height: 3em;
-  width: 100%;
+.icon-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: -0.25em 0;
+  padding: 0.5rem;
+  opacity: 0.85;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.icon-btn:active {
+  transform: scale(0.92);
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Main Player Column (Spotify Standard Content Width: max 24rem)
+   ========================================================================== */
+.player-content {
+  width: 100%;
+  max-width: 24rem;
+  padding: 0 1.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  flex-grow: 1;
+  justify-content: space-evenly;
+}
+
+/* Album Art: Spotify 1:1 Square Card */
+.artwork-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.4rem 0;
+}
+
+#album-art {
+  width: 100%;
+  max-width: 20.5rem;
+  max-height: 40svh;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+  flex-shrink: 0;
+  transition: transform 0.35s ease;
+}
+
+/* ==========================================================================
+   Track Info Row: Title & Artist on Left, Heart on Right
+   ========================================================================== */
+.track-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 0.4rem;
+}
+
+.track-text {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-right: 1rem;
+}
+
+#title {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+#artist {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.65);
+  margin-top: 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.heart-btn {
+  color: rgba(255, 255, 255, 0.7);
+  flex-shrink: 0;
+  padding: 0.25rem;
+  transition: color 0.2s ease, transform 0.15s ease;
+}
+
+.heart-btn.liked {
+  color: #1ed760 !important;
+}
+
+.heart-btn.liked svg {
+  fill: #1ed760;
+}
+
+/* ==========================================================================
+   Scrubber / Progress Section
+   ========================================================================== */
+.progress-section {
+  width: 100%;
+  margin-top: 0.4rem;
+}
+
+.progress-container {
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
   cursor: pointer;
   touch-action: none;
 }
 
-.progress {
-  height: 0.22em;
-  background-color: #888;
+.progress-track {
+  width: 100%;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.25);
+  border-radius: 2px;
   position: relative;
-  border-radius: 0.11em;
-  width: 85vw;
-  max-width: 20em;
-  cursor: pointer;
   transition: height 0.15s ease;
 }
 
-.progress-container:hover .progress,
-.progress-container.scrubbing .progress {
-  height: 0.35em;
+.progress-container:hover .progress-track,
+.progress-container.scrubbing .progress-track {
+  height: 6px;
 }
 
 .progress-bar {
-  filter: opacity(75%);
   height: 100%;
-  background-color: white;
-  border-radius: 0.11em;
+  background-color: #ffffff;
+  border-radius: 2px;
   width: 0%;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
   pointer-events: none;
+}
+
+.progress-container:hover .progress-bar,
+.progress-container.scrubbing .progress-bar {
+  background-color: #1ed760;
 }
 
 .progress-thumb {
   position: absolute;
   top: 50%;
   left: 0%;
-  width: 13px;
-  height: 13px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  background-color: white;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
-  transform: translate(-50%, -50%) scale(0.85);
+  background-color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  transform: translate(-50%, -50%) scale(0);
   pointer-events: none;
   transition: transform 0.15s ease;
 }
 
 .progress-container:hover .progress-thumb,
 .progress-container.scrubbing .progress-thumb {
-  transform: translate(-50%, -50%) scale(1.35);
-  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.9);
+  transform: translate(-50%, -50%) scale(1.2);
 }
 
-.time {
-  padding-top: 0.25em;
+.time-row {
   display: flex;
   justify-content: space-between;
-  width: 85vw;
-  max-width: 20em;
-  font-size: 0.75em;
-  font-weight: 100;
-  opacity: 0.75;
-  pointer-events: none;
+  width: 100%;
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.65);
   font-variant-numeric: tabular-nums;
-  margin-bottom: 0.25em;
+  margin-top: -0.15rem;
 }
 
-/* Playback Controls */
-.controls {
+/* ==========================================================================
+   Playback Controls (Spotify Spacing & Sizes)
+   ========================================================================== */
+.controls-row {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  margin: 0.5em 0;
+  width: 100%;
+  margin-top: 0.4rem;
 }
 
-.control-button {
+.control-btn {
+  background: none;
   border: none;
-  border-radius: 50%;
-  background-color: transparent;
   cursor: pointer;
   display: flex;
-  justify-content: center;
   align-items: center;
-  transition: transform 0.15s ease;
-  margin: 0 1.25em;
+  justify-content: center;
+  color: #ffffff;
+  transition: transform 0.15s ease, opacity 0.15s ease, color 0.15s ease;
 }
 
-.control-button:active {
+.control-btn:active {
   transform: scale(0.92);
 }
 
-.skip-button {
-  width: 4em;
-  height: 4em;
+.shuffle-btn,
+.repeat-btn {
+  color: rgba(255, 255, 255, 0.65);
+  padding: 0.5rem;
 }
 
-.skip-button img {
-  height: 2.2em;
-  pointer-events: none;
+.shuffle-btn.active,
+.repeat-btn.active {
+  color: #1ed760;
+}
+
+.skip-btn {
+  padding: 0.5rem;
   opacity: 0.9;
 }
 
-.play-button {
-  width: 5.8em;
-  height: 5.8em;
+.skip-btn:hover {
+  opacity: 1;
 }
 
-.play-button img {
-  height: 5.5em;
-  width: 5.5em;
-  object-fit: contain;
-  pointer-events: none;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.45));
-}
-
-/* Arrow Navigation Button */
-#arrow-link {
+.play-pause-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  color: #000000;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
   display: flex;
+  align-items: center;
   justify-content: center;
+}
+
+.play-pause-btn:active {
+  transform: scale(0.94);
+}
+
+/* ==========================================================================
+   Bottom Utility Row (Device Output & Queue Drawer Trigger)
+   ========================================================================== */
+.bottom-utility-row {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 0.75em 0;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  margin-bottom: max(0.5em, env(safe-area-inset-bottom));
+  padding: 0 1.5rem;
+  height: 2.75rem;
   flex-shrink: 0;
 }
 
+.device-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.drawer-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  padding: 0.4rem 0.85rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.08);
+  transition: background-color 0.2s, transform 0.15s;
+}
+
+.drawer-trigger:active {
+  background: rgba(255, 255, 255, 0.16);
+  transform: scale(0.96);
+}
+
 .chevron-svg {
-  width: 32px;
-  height: 18px;
-  pointer-events: none;
   transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
@@ -300,28 +438,25 @@ a {
   transform: rotate(180deg);
 }
 
-/* Song Area (Stationed BEHIND the Main Player) */
+/* ==========================================================================
+   Song Area (Stationed BEHIND the Main Player - Spotify Queue Layout)
+   ========================================================================== */
 #song-area {
-  background-color: #0b1526;
-  height: 22em;
-  width: 100%;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  padding-bottom: max(2em, calc(env(safe-area-inset-bottom) + 0.5em));
-  padding-top: 1em;
-  z-index: 1;
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  overflow: hidden;
+  height: 26.5rem;
+  background-color: #081224;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.5rem max(2rem, env(safe-area-inset-bottom)) 1.5rem;
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease, visibility 0.25s ease;
+  overflow: hidden;
 }
 
 .main-player.drawer-open ~ #song-area,
@@ -331,68 +466,124 @@ a {
   pointer-events: auto;
 }
 
-.song {
+.queue-header {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 0.5rem;
+}
+
+.queue-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.queue-subtitle {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 1px;
+}
+
+.queue-count {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.song-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.song-row {
+  display: flex;
   align-items: center;
-  padding: 0.65em 0.8em;
-  width: calc(87% - 1em);
-  max-width: 26em;
-  opacity: 0.75;
+  justify-content: space-between;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.15s ease, opacity 0.15s ease;
-  border-radius: 0.6em;
+  transition: background-color 0.15s ease;
 }
 
-.song p {
-  margin: 0;
+.song-row:hover {
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
-.song:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  opacity: 1;
-}
-
-.song:active {
+.song-row:active {
   background-color: rgba(255, 255, 255, 0.15);
 }
 
-.playing {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  opacity: 1;
+.song-row.playing {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.song-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  overflow: hidden;
+}
+
+.song-number {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+  width: 1.25rem;
+  text-align: center;
+}
+
+.song-row.playing .song-number {
+  color: #1ed760;
+  font-weight: 700;
+}
+
+.song-details {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.song-name {
+  font-size: 0.95rem;
   font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-#waubash-song {
-  border-top-left-radius: 1em;
-  border-top-right-radius: 1em;
+.song-row.playing .song-name {
+  color: #1ed760;
 }
 
-#docsguitar-song {
-  border-bottom-left-radius: 1em;
-  border-bottom-right-radius: 1em;
+.song-artist-name {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 2px;
 }
 
-.separator {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  width: 87%;
-  max-width: 26em;
-  margin: 0 auto;
+.song-duration {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
 }
 
-/* Tablet & Desktop Layout (Matching iPad Mockup from Screenshots/1.jpg) */
+/* ==========================================================================
+   Tablet & Desktop Layout (Spotify Desktop / iPad 2-Column Mode)
+   ========================================================================== */
 @media only screen and (min-width: 668px) {
-  #chevronIcon,
-  .chevron-svg,
-  #image,
-  #arrow-link {
+  .top-btn,
+  .drawer-trigger {
     display: none;
   }
 
   body {
-    padding: 1.5rem;
-    max-width: 54em;
+    padding: 2rem;
+    max-width: 58rem;
     min-height: 85vh;
     margin: 0 auto;
     justify-content: center;
@@ -402,76 +593,41 @@ a {
   #page-content {
     position: static;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     height: auto;
     min-height: auto;
     background: transparent;
+    gap: 3rem;
   }
 
   .main-player {
     position: static;
-    width: 100%;
+    width: 26rem;
     height: auto;
     min-height: auto;
-    max-height: 24em;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     transform: none !important;
-    padding: 1.5em 0;
-    gap: 3.5rem;
-    background: transparent;
+    padding: 2rem;
+    background: rgba(13, 30, 61, 0.6);
+    border-radius: 1.5rem;
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .player-content {
+    padding: 0;
+    max-width: 100%;
   }
 
   #album-art {
-    width: 260px;
-    height: 260px;
+    max-width: 18rem;
     max-height: none;
-    margin: 0;
-  }
-
-  .middle-area {
-    min-width: 22em;
-    align-items: flex-start;
-    text-align: left;
-    margin: 0;
-  }
-
-  #title {
-    text-align: left;
-    font-size: 2.1em;
-  }
-
-  #artist {
-    text-align: left;
-    margin-bottom: 0.5em;
-  }
-
-  .progress-container {
-    width: 100%;
-    justify-content: flex-start;
-  }
-
-  .progress {
-    width: 100%;
-    max-width: none;
-  }
-
-  .time {
-    width: 100%;
-    max-width: none;
-  }
-
-  .controls {
-    justify-content: flex-start;
-    margin: 1.5em 0 0 0;
-  }
-
-  .control-button {
-    margin: 0 1.5em 0 0;
   }
 
   #song-area {
@@ -479,47 +635,32 @@ a {
     visibility: visible !important;
     opacity: 1 !important;
     pointer-events: auto !important;
-    height: 18em;
-    max-width: 52em;
+    height: auto;
+    max-width: 24rem;
     width: 100%;
-    border-radius: 2em;
-    margin-top: 1.5em;
-    padding: 1.25em 2em;
-    justify-content: center;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
-    background-color: #0b1526;
-  }
-
-  .song {
-    max-width: 100%;
-    width: 100%;
-    padding: 0.6em 1em;
-  }
-
-  .separator {
-    max-width: 100%;
-    width: 100%;
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+    justify-content: flex-start;
+    background: rgba(13, 30, 61, 0.6);
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
   }
 }
 
-/* Small Screens */
+/* Small Screens (e.g. iPhone SE) */
 @media only screen and (max-height: 680px) and (max-width: 480px) {
   #album-art {
-    width: min(72vw, 34vh, 34svh, 16em);
-    height: min(72vw, 34vh, 34svh, 16em);
+    max-width: 15rem;
+    max-height: 32svh;
   }
 
   #title {
-    font-size: 1.5em;
+    font-size: 1.25rem;
   }
 
-  .play-button {
-    width: 4.8em;
-    height: 4.8em;
-  }
-
-  .play-button img {
-    height: 4.6em;
-    width: 4.6em;
+  .play-pause-btn {
+    width: 56px;
+    height: 56px;
   }
 }

@@ -1,7 +1,7 @@
 /**
- * Corey Lawrence Music - Authentic & Polished Client Controller
- * Faithful to original architecture: Fixed drawer behind player with curtain reveal,
- * natural full-screen swipe gestures, reliable iOS playback, and precision scrubbing.
+ * Corey Lawrence Music - Spotify-Inspired Controller
+ * Modeled on Spotify's Now Playing screen architecture, control proportions,
+ * queue drawer curtain reveal, precision scrubbing, and iOS audio reliability.
  */
 
 'use strict';
@@ -52,16 +52,21 @@ document.addEventListener('DOMContentLoaded', () => {
     albumArt: document.getElementById('album-art'),
     title: document.getElementById('title'),
     artist: document.getElementById('artist'),
+    heartBtn: document.getElementById('heartButton'),
     progressContainer: document.getElementById('progressContainer'),
     progressTrack: document.getElementById('progressTrack'),
     progressBar: document.getElementById('progressBar'),
     progressThumb: document.getElementById('progressThumb'),
     countUp: document.getElementById('count-up'),
     countDown: document.getElementById('count-down'),
+    shuffleBtn: document.getElementById('shuffleButton'),
     skipBackBtn: document.getElementById('skipBackButton'),
     playPauseBtn: document.getElementById('playPauseButton'),
-    playPauseImg: document.getElementById('playPauseImg'),
+    playIconSvg: document.getElementById('playIconSvg'),
     skipForwardBtn: document.getElementById('skipForwardButton'),
+    repeatBtn: document.getElementById('repeatButton'),
+    minimizeBtn: document.getElementById('minimizeBtn'),
+    queueBtn: document.getElementById('queueBtn'),
     arrowLink: document.getElementById('arrow-link'),
     chevronIcon: document.getElementById('chevronIcon'),
     mainPlayer: document.getElementById('mainPlayer'),
@@ -76,6 +81,9 @@ document.addEventListener('DOMContentLoaded', () => {
     isScrubbing: false,
     wasPlayingBeforeScrub: false,
     isDrawerOpen: false,
+    isShuffle: false,
+    isRepeat: false,
+    likedSongs: new Set(JSON.parse(localStorage.getItem('liked_songs') || '[]')),
     touchStartY: 0,
     touchStartX: 0
   };
@@ -96,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     initUnlock() {
-      // First interaction unlock for iOS
+      // First interaction unlock for iOS Safari
       const unlock = () => {
         if (DOM.audio.paused && !state.isPlaying) {
           DOM.audio.load();
@@ -112,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
       DOM.audio.addEventListener('play', () => this.onPlay());
       DOM.audio.addEventListener('pause', () => this.onPause());
       DOM.audio.addEventListener('timeupdate', () => this.onTimeUpdate());
-      DOM.audio.addEventListener('ended', () => this.nextTrack());
+      DOM.audio.addEventListener('ended', () => this.onEnded());
       DOM.audio.addEventListener('loadedmetadata', () => {
         this.updateTimeDisplay();
         MediaSession.update();
@@ -131,6 +139,9 @@ document.addEventListener('DOMContentLoaded', () => {
       DOM.audio.src = song.fileName;
       DOM.title.textContent = song.title;
       DOM.artist.textContent = song.artist;
+
+      // Update liked heart state
+      this.updateHeartUI();
 
       // Reset scrubber
       DOM.progressBar.style.width = '0%';
@@ -184,8 +195,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     updatePlayUI(isPlaying) {
-      DOM.playPauseImg.src = isPlaying ? 'pause.png' : 'play.png';
+      if (DOM.playIconSvg) {
+        DOM.playIconSvg.innerHTML = isPlaying
+          ? '<rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect>'
+          : '<polygon points="8,5 19,12 8,19"></polygon>';
+      }
       DOM.playPauseBtn.setAttribute('aria-label', isPlaying ? 'Pause track' : 'Play track');
+    }
+
+    updateHeartUI() {
+      if (!DOM.heartBtn) return;
+      const isLiked = state.likedSongs.has(state.currentIndex);
+      if (isLiked) {
+        DOM.heartBtn.classList.add('liked');
+        DOM.heartBtn.querySelector('svg').setAttribute('fill', '#1ed760');
+      } else {
+        DOM.heartBtn.classList.remove('liked');
+        DOM.heartBtn.querySelector('svg').setAttribute('fill', 'none');
+      }
+    }
+
+    toggleHeart() {
+      if (state.likedSongs.has(state.currentIndex)) {
+        state.likedSongs.delete(state.currentIndex);
+      } else {
+        state.likedSongs.add(state.currentIndex);
+      }
+      localStorage.setItem('liked_songs', JSON.stringify([...state.likedSongs]));
+      this.updateHeartUI();
     }
 
     onTimeUpdate() {
@@ -209,7 +246,30 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    onEnded() {
+      if (state.isRepeat) {
+        DOM.audio.currentTime = 0;
+        this.play();
+      } else if (state.isShuffle) {
+        let randIndex = Math.floor(Math.random() * SONGS.length);
+        if (randIndex === state.currentIndex && SONGS.length > 1) {
+          randIndex = (randIndex + 1) % SONGS.length;
+        }
+        this.loadTrack(randIndex, true);
+      } else {
+        this.nextTrack();
+      }
+    }
+
     nextTrack() {
+      if (state.isShuffle) {
+        let randIndex = Math.floor(Math.random() * SONGS.length);
+        if (randIndex === state.currentIndex && SONGS.length > 1) {
+          randIndex = (randIndex + 1) % SONGS.length;
+        }
+        this.loadTrack(randIndex, true);
+        return;
+      }
       const nextIndex = (state.currentIndex + 1) % SONGS.length;
       this.loadTrack(nextIndex, true);
     }
@@ -224,21 +284,41 @@ document.addEventListener('DOMContentLoaded', () => {
       this.loadTrack(prevIndex, true);
     }
 
-    seekToFraction(fraction) {
-      if (isNaN(DOM.audio.duration)) return;
-      const targetTime = fraction * DOM.audio.duration;
-      DOM.audio.currentTime = targetTime;
-      this.updateTimeDisplay();
+    updateActiveHighlight() {
+      DOM.songRows.forEach((row, i) => {
+        if (i === state.currentIndex) {
+          row.classList.add('playing');
+        } else {
+          row.classList.remove('playing');
+        }
+      });
     }
 
-    updateActiveHighlight() {
-      DOM.songRows.forEach((row, idx) => {
-        row.classList.toggle('playing', idx === state.currentIndex);
-      });
+    seekToFraction(fraction) {
+      const dur = DOM.audio.duration;
+      if (!isNaN(dur) && dur > 0) {
+        const newTime = fraction * dur;
+        DOM.audio.currentTime = newTime;
+        this.updateTimeDisplay();
+      }
+    }
+
+    toggleShuffle() {
+      state.isShuffle = !state.isShuffle;
+      if (DOM.shuffleBtn) {
+        DOM.shuffleBtn.classList.toggle('active', state.isShuffle);
+      }
+    }
+
+    toggleRepeat() {
+      state.isRepeat = !state.isRepeat;
+      if (DOM.repeatBtn) {
+        DOM.repeatBtn.classList.toggle('active', state.isRepeat);
+      }
     }
   }
 
-  // Pointer Scrubber Controller
+  // Scrubber Controller (Precision Pointer Capture & Scratching)
   class ScrubberController {
     constructor(engine) {
       this.engine = engine;
@@ -247,6 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     init() {
       const container = DOM.progressContainer;
+      if (!container) return;
 
       container.addEventListener('pointerdown', (e) => this.onPointerDown(e));
       window.addEventListener('pointermove', (e) => this.onPointerMove(e));
@@ -310,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Curtain Drawer Controller (Player slides up to reveal drawer behind)
+  // Curtain Drawer Controller (Player slides up to reveal queue behind)
   class DrawerController {
     constructor(engine) {
       this.engine = engine;
@@ -318,18 +399,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     init() {
-      // Arrow link click toggles drawer
-      DOM.arrowLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        this.toggle();
+      // Drawer trigger buttons
+      const triggers = [DOM.arrowLink, DOM.minimizeBtn, DOM.queueBtn].filter(Boolean);
+      triggers.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.toggle();
+        });
       });
 
       // Swipe Gestures anywhere on the screen
       window.addEventListener(
         'touchstart',
         (e) => {
-          // Ignore if user is touching the scrubber
           if (e.target.closest('.progress-container')) return;
           state.touchStartY = e.touches[0].clientY;
           state.touchStartX = e.touches[0].clientX;
@@ -360,7 +443,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // If user taps on the main player while it is slid up, close the drawer
       DOM.mainPlayer.addEventListener('click', (e) => {
-        if (state.isDrawerOpen && !e.target.closest('#arrow-link') && !e.target.closest('.controls') && !e.target.closest('.progress-container')) {
+        if (
+          state.isDrawerOpen &&
+          !e.target.closest('.drawer-trigger') &&
+          !e.target.closest('.controls-row') &&
+          !e.target.closest('.progress-section') &&
+          !e.target.closest('.top-bar')
+        ) {
           this.close();
         }
       });
@@ -469,6 +558,16 @@ document.addEventListener('DOMContentLoaded', () => {
   DOM.playPauseBtn.addEventListener('click', () => engine.togglePlayPause());
   DOM.skipBackBtn.addEventListener('click', () => engine.prevTrack());
   DOM.skipForwardBtn.addEventListener('click', () => engine.nextTrack());
+
+  if (DOM.shuffleBtn) {
+    DOM.shuffleBtn.addEventListener('click', () => engine.toggleShuffle());
+  }
+  if (DOM.repeatBtn) {
+    DOM.repeatBtn.addEventListener('click', () => engine.toggleRepeat());
+  }
+  if (DOM.heartBtn) {
+    DOM.heartBtn.addEventListener('click', () => engine.toggleHeart());
+  }
 
   // Bind Song Rows in Drawer
   DOM.songRows.forEach((row) => {
