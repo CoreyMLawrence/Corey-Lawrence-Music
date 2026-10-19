@@ -1,6 +1,7 @@
 /**
- * Corey Lawrence Music - Client Audio Controller & UI Manager
- * Fully refactored for iOS PWA, precision pointer scrubbing, bottom sheet drawer, and MediaSession sync.
+ * Corey Lawrence Music - Authentic & Polished Client Controller
+ * Faithful to original architecture: Fixed drawer behind player with curtain reveal,
+ * natural full-screen swipe gestures, reliable iOS playback, and precision scrubbing.
  */
 
 'use strict';
@@ -63,9 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
     skipForwardBtn: document.getElementById('skipForwardButton'),
     arrowLink: document.getElementById('arrow-link'),
     arrowImg: document.getElementById('image'),
+    mainPlayer: document.getElementById('mainPlayer'),
     songArea: document.getElementById('song-area'),
-    drawerBackdrop: document.getElementById('drawer-backdrop'),
-    drawerHandle: document.getElementById('drawerHandle'),
     songRows: document.querySelectorAll('.song')
   };
 
@@ -76,13 +76,12 @@ document.addEventListener('DOMContentLoaded', () => {
     isScrubbing: false,
     wasPlayingBeforeScrub: false,
     isDrawerOpen: false,
-    drawerStartY: 0,
-    drawerCurrentY: 0,
-    isDraggingDrawer: false
+    touchStartY: 0,
+    touchStartX: 0
   };
 
-  // Formatting helper
-  function formatSeconds(secs) {
+  // Time formatter
+  function formatTime(secs) {
     if (isNaN(secs) || secs < 0) return '0:00';
     const m = Math.floor(secs / 60);
     const s = Math.floor(secs % 60);
@@ -97,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     initUnlock() {
-      // First interaction unlock for iOS Safari
+      // First interaction unlock for iOS
       const unlock = () => {
         if (DOM.audio.paused && !state.isPlaying) {
           DOM.audio.load();
@@ -139,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
       DOM.countUp.textContent = '0:00';
       DOM.countDown.textContent = `-${song.duration}`;
 
-      this.updateActiveSongHighlight();
+      this.updateActiveHighlight();
       MediaSession.update();
 
       if (autoPlay) {
@@ -185,9 +184,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     updatePlayUI(isPlaying) {
-      DOM.playPauseImg.src = isPlaying ? './pause.png' : './play.png';
+      DOM.playPauseImg.src = isPlaying ? 'pause.png' : 'play.png';
       DOM.playPauseBtn.setAttribute('aria-label', isPlaying ? 'Pause track' : 'Play track');
-      DOM.albumArt.classList.toggle('playing', isPlaying);
     }
 
     onTimeUpdate() {
@@ -203,12 +201,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const pct = (cur / dur) * 100;
         DOM.progressBar.style.width = `${pct}%`;
         DOM.progressThumb.style.left = `${pct}%`;
-        DOM.progressContainer.setAttribute('aria-valuenow', Math.round(pct));
-        DOM.countUp.textContent = formatSeconds(cur);
-        DOM.countDown.textContent = `-${formatSeconds(dur - cur)}`;
+        DOM.countUp.textContent = formatTime(cur);
+        DOM.countDown.textContent = `-${formatTime(dur - cur)}`;
         MediaSession.syncPosition();
       } else {
-        DOM.countUp.textContent = formatSeconds(cur);
+        DOM.countUp.textContent = formatTime(cur);
       }
     }
 
@@ -234,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
       this.updateTimeDisplay();
     }
 
-    updateActiveSongHighlight() {
+    updateActiveHighlight() {
       DOM.songRows.forEach((row, idx) => {
         row.classList.toggle('playing', idx === state.currentIndex);
       });
@@ -255,20 +252,6 @@ document.addEventListener('DOMContentLoaded', () => {
       window.addEventListener('pointermove', (e) => this.onPointerMove(e));
       window.addEventListener('pointerup', (e) => this.onPointerUp(e));
       window.addEventListener('pointercancel', (e) => this.onPointerUp(e));
-
-      // Keyboard Controls
-      container.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight') {
-          DOM.audio.currentTime = Math.min(DOM.audio.currentTime + 5, DOM.audio.duration || 0);
-          this.engine.updateTimeDisplay();
-        } else if (e.key === 'ArrowLeft') {
-          DOM.audio.currentTime = Math.max(DOM.audio.currentTime - 5, 0);
-          this.engine.updateTimeDisplay();
-        } else if (e.key === ' ' || e.key === 'Enter') {
-          e.preventDefault();
-          this.engine.togglePlayPause();
-        }
-      });
     }
 
     calcFraction(e) {
@@ -304,8 +287,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!isNaN(DOM.audio.duration) && DOM.audio.duration > 0) {
         const previewTime = fraction * DOM.audio.duration;
-        DOM.countUp.textContent = formatSeconds(previewTime);
-        DOM.countDown.textContent = `-${formatSeconds(DOM.audio.duration - previewTime)}`;
+        DOM.countUp.textContent = formatTime(previewTime);
+        DOM.countDown.textContent = `-${formatTime(DOM.audio.duration - previewTime)}`;
       }
     }
 
@@ -327,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Drawer / Bottom Sheet Controller
+  // Curtain Drawer Controller (Player slides up to reveal drawer behind)
   class DrawerController {
     constructor(engine) {
       this.engine = engine;
@@ -335,25 +318,49 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     init() {
-      // Toggle button (bottom arrow)
+      // Arrow link click toggles drawer
       DOM.arrowLink.addEventListener('click', (e) => {
+        e.preventDefault();
         e.stopPropagation();
         this.toggle();
       });
 
-      // Tap backdrop to close
-      DOM.drawerBackdrop.addEventListener('click', () => this.close());
+      // Swipe Gestures anywhere on the screen
+      window.addEventListener(
+        'touchstart',
+        (e) => {
+          // Ignore if user is touching the scrubber
+          if (e.target.closest('.progress-container')) return;
+          state.touchStartY = e.touches[0].clientY;
+          state.touchStartX = e.touches[0].clientX;
+        },
+        { passive: true }
+      );
 
-      // Touch drag handle to pull down & close
-      const handle = DOM.drawerHandle;
-      handle.addEventListener('touchstart', (e) => this.onTouchStart(e), { passive: true });
-      handle.addEventListener('touchmove', (e) => this.onTouchMove(e), { passive: false });
-      handle.addEventListener('touchend', (e) => this.onTouchEnd(e));
-      handle.addEventListener('click', () => this.close());
+      window.addEventListener(
+        'touchend',
+        (e) => {
+          if (e.target.closest('.progress-container')) return;
+          const deltaY = state.touchStartY - e.changedTouches[0].clientY;
+          const deltaX = state.touchStartX - e.changedTouches[0].clientX;
 
-      // Close on Escape key
-      window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && state.isDrawerOpen) {
+          // Require predominantly vertical swipe of at least 35px
+          if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 35) {
+            if (deltaY > 0) {
+              // Swiped UP -> open drawer (slide player up)
+              this.open();
+            } else {
+              // Swiped DOWN -> close drawer (slide player down)
+              this.close();
+            }
+          }
+        },
+        { passive: true }
+      );
+
+      // If user taps on the main player while it is slid up, close the drawer
+      DOM.mainPlayer.addEventListener('click', (e) => {
+        if (state.isDrawerOpen && !e.target.closest('#arrow-link') && !e.target.closest('.controls') && !e.target.closest('.progress-container')) {
           this.close();
         }
       });
@@ -369,50 +376,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     open() {
       state.isDrawerOpen = true;
-      DOM.songArea.classList.add('open');
-      DOM.drawerBackdrop.classList.add('open');
-      DOM.arrowImg.classList.add('flipped');
-      DOM.arrowLink.setAttribute('aria-expanded', 'true');
+      DOM.mainPlayer.classList.add('drawer-open');
     }
 
     close() {
       state.isDrawerOpen = false;
-      DOM.songArea.classList.remove('open');
-      DOM.drawerBackdrop.classList.remove('open');
-      DOM.arrowImg.classList.remove('flipped');
-      DOM.arrowLink.setAttribute('aria-expanded', 'false');
-      DOM.songArea.style.transform = '';
-    }
-
-    onTouchStart(e) {
-      state.drawerStartY = e.touches[0].clientY;
-      state.isDraggingDrawer = true;
-      DOM.songArea.style.transition = 'none';
-    }
-
-    onTouchMove(e) {
-      if (!state.isDraggingDrawer) return;
-      const currentY = e.touches[0].clientY;
-      const deltaY = currentY - state.drawerStartY;
-
-      if (deltaY > 0) {
-        e.preventDefault();
-        DOM.songArea.style.transform = `translateY(${deltaY}px)`;
-        state.drawerCurrentY = deltaY;
-      }
-    }
-
-    onTouchEnd() {
-      if (!state.isDraggingDrawer) return;
-      state.isDraggingDrawer = false;
-      DOM.songArea.style.transition = '';
-
-      if (state.drawerCurrentY > 55) {
-        this.close();
-      } else {
-        DOM.songArea.style.transform = '';
-      }
-      state.drawerCurrentY = 0;
+      DOM.mainPlayer.classList.remove('drawer-open');
     }
   }
 
@@ -455,10 +424,10 @@ document.addEventListener('DOMContentLoaded', () => {
         artist: song.artist,
         album: 'Old-Time Couch Recordings',
         artwork: [
-          { src: './album-art-128.jpg', sizes: '128x128', type: 'image/jpeg' },
-          { src: './album-art-256.jpg', sizes: '256x256', type: 'image/jpeg' },
-          { src: './album-art-512.jpg', sizes: '512x512', type: 'image/jpeg' },
-          { src: './album-art-1024.jpg', sizes: '1024x1024', type: 'image/jpeg' }
+          { src: 'album-art-128.jpg', sizes: '128x128', type: 'image/jpeg' },
+          { src: 'album-art-256.jpg', sizes: '256x256', type: 'image/jpeg' },
+          { src: 'album-art-512.jpg', sizes: '512x512', type: 'image/jpeg' },
+          { src: 'album-art-1024.jpg', sizes: '1024x1024', type: 'image/jpeg' }
         ]
       });
       this.syncPosition();
@@ -498,17 +467,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Bind Song Rows in Drawer
   DOM.songRows.forEach((row) => {
     const idx = parseInt(row.dataset.index, 10);
-    const select = () => {
+    row.addEventListener('click', (e) => {
+      e.preventDefault();
       engine.loadTrack(idx, true);
       if (window.innerWidth < 668) {
         drawer.close();
-      }
-    };
-    row.addEventListener('click', select);
-    row.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        select();
       }
     });
   });
@@ -522,6 +485,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Initialize with Track 0 (loaded and primed)
+  // Load initial track
   engine.loadTrack(0, false);
 });
