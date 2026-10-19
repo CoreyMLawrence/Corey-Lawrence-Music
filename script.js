@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     calcFraction(e) {
       const rect = DOM.progressTrack.getBoundingClientRect();
-      const clientX = e.clientX ?? (e.touches ? e.touches[0].clientX : 0);
+      const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
       const offset = clientX - rect.left;
       return Math.min(Math.max(offset / rect.width, 0), 1);
     }
@@ -500,16 +500,13 @@ document.addEventListener('DOMContentLoaded', () => {
             this.engine.updateTimeDisplay();
           }
         });
-        navigator.mediaSession.setActionHandler('seekbackward', (details) => {
-          const skip = details.seekOffset || 10;
-          DOM.audio.currentTime = Math.max(DOM.audio.currentTime - skip, 0);
-          this.engine.updateTimeDisplay();
-        });
-        navigator.mediaSession.setActionHandler('seekforward', (details) => {
-          const skip = details.seekOffset || 10;
-          DOM.audio.currentTime = Math.min(DOM.audio.currentTime + skip, DOM.audio.duration || 0);
-          this.engine.updateTimeDisplay();
-        });
+      } catch (_) {}
+
+      // Explicitly set seekbackward and seekforward to null so iOS Lock Screen and Control Center
+      // display full-song skip buttons (⏮ / ⏭) instead of 10s/15s skip buttons (⟲ / ⟳)
+      try {
+        navigator.mediaSession.setActionHandler('seekbackward', null);
+        navigator.mediaSession.setActionHandler('seekforward', null);
       } catch (_) {}
     },
 
