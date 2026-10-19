@@ -116,6 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initEvents() {
       DOM.audio.addEventListener('play', () => this.onPlay());
+      DOM.audio.addEventListener('playing', () => this.onPlaying());
       DOM.audio.addEventListener('pause', () => this.onPause());
       DOM.audio.addEventListener('timeupdate', () => this.onTimeUpdate());
       DOM.audio.addEventListener('ended', () => this.onEnded());
@@ -184,12 +185,21 @@ document.addEventListener('DOMContentLoaded', () => {
       state.isPlaying = true;
       this.updatePlayUI(true);
       MediaSession.setPlaybackState('playing');
+      MediaSession.bindHandlers();
+    }
+
+    onPlaying() {
+      state.isPlaying = true;
+      this.updatePlayUI(true);
+      MediaSession.update();
+      MediaSession.bindHandlers();
     }
 
     onPause() {
       state.isPlaying = false;
       this.updatePlayUI(false);
       MediaSession.setPlaybackState('paused');
+      MediaSession.bindHandlers();
     }
 
     updatePlayUI(isPlaying) {
@@ -238,7 +248,6 @@ document.addEventListener('DOMContentLoaded', () => {
         DOM.progressThumb.style.left = `${pct}%`;
         DOM.countUp.textContent = formatTime(cur);
         DOM.countDown.textContent = `-${formatTime(dur - cur)}`;
-        MediaSession.syncPosition();
       } else {
         DOM.countUp.textContent = formatTime(cur);
       }
@@ -482,54 +491,63 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // MediaSession API Integration
+  // MediaSession API Integration (iOS Lock Screen & Control Center)
   const MediaSession = {
     init(engine) {
       this.engine = engine;
       if (!('mediaSession' in navigator)) return;
+      this.bindHandlers();
+    },
 
-      navigator.mediaSession.setActionHandler('play', () => this.engine.play());
-      navigator.mediaSession.setActionHandler('pause', () => this.engine.pause());
-      navigator.mediaSession.setActionHandler('previoustrack', () => this.engine.prevTrack());
-      navigator.mediaSession.setActionHandler('nexttrack', () => this.engine.nextTrack());
+    bindHandlers() {
+      if (!('mediaSession' in navigator)) return;
 
       try {
-        navigator.mediaSession.setActionHandler('seekto', (details) => {
-          if (details.seekTime != null) {
-            DOM.audio.currentTime = details.seekTime;
-            this.engine.updateTimeDisplay();
-          }
-        });
-      } catch (_) {}
+        navigator.mediaSession.setActionHandler('play', () => this.engine.play());
+        navigator.mediaSession.setActionHandler('pause', () => this.engine.pause());
+        navigator.mediaSession.setActionHandler('previoustrack', () => this.engine.prevTrack());
+        navigator.mediaSession.setActionHandler('nexttrack', () => this.engine.nextTrack());
 
-      // Explicitly set seekbackward and seekforward to null so iOS Lock Screen and Control Center
-      // display full-song skip buttons (⏮ / ⏭) instead of 10s/15s skip buttons (⟲ / ⟳)
-      try {
+        // Explicitly set seekbackward, seekforward, and seekto to null so iOS Lock Screen and Control Center
+        // display full-song skip buttons (⏮ / ⏭) instead of 10s/15s skip buttons (⟲ / ⟳)
         navigator.mediaSession.setActionHandler('seekbackward', null);
         navigator.mediaSession.setActionHandler('seekforward', null);
-      } catch (_) {}
+        navigator.mediaSession.setActionHandler('seekto', null);
+      } catch (err) {
+        console.warn('[MediaSession] Handler binding error:', err);
+      }
     },
 
     update() {
       if (!('mediaSession' in navigator)) return;
       const song = SONGS[state.currentIndex];
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title: song.title,
-        artist: song.artist,
-        album: 'Old-Time Couch Recordings',
-        artwork: [
-          { src: 'album-art-128.jpg', sizes: '128x128', type: 'image/jpeg' },
-          { src: 'album-art-256.jpg', sizes: '256x256', type: 'image/jpeg' },
-          { src: 'album-art-512.jpg', sizes: '512x512', type: 'image/jpeg' },
-          { src: 'album-art-1024.jpg', sizes: '1024x1024', type: 'image/jpeg' }
-        ]
-      });
+      const baseUrl = window.location.href.split('?')[0].split('#')[0].replace(/\/[^/]*$/, '/');
+
+      try {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: song.title,
+          artist: song.artist,
+          album: 'Old-Time Couch Recordings',
+          artwork: [
+            { src: baseUrl + 'album-art-128.jpg', sizes: '128x128', type: 'image/jpeg' },
+            { src: baseUrl + 'album-art-256.jpg', sizes: '256x256', type: 'image/jpeg' },
+            { src: baseUrl + 'album-art-512.jpg', sizes: '512x512', type: 'image/jpeg' },
+            { src: baseUrl + 'album-art-1024.jpg', sizes: '1024x1024', type: 'image/jpeg' }
+          ]
+        });
+      } catch (err) {
+        console.warn('[MediaSession] Metadata error:', err);
+      }
+
+      this.bindHandlers();
       this.syncPosition();
     },
 
     setPlaybackState(status) {
       if (!('mediaSession' in navigator)) return;
       navigator.mediaSession.playbackState = status;
+      this.bindHandlers();
+      this.syncPosition();
     },
 
     syncPosition() {
@@ -540,7 +558,7 @@ document.addEventListener('DOMContentLoaded', () => {
           navigator.mediaSession.setPositionState({
             duration: dur,
             playbackRate: DOM.audio.playbackRate || 1.0,
-            position: Math.min(DOM.audio.currentTime || 0, dur)
+            position: Math.min(Math.max(DOM.audio.currentTime || 0, 0), dur)
           });
         } catch (_) {}
       }

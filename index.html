@@ -8,7 +8,7 @@
     />
     <title>Corey Lawrence Music</title>
     <link rel="icon" href="./favicon.png" type="image/png" />
-    <link rel="stylesheet" href="styles.css?v=13.0" />
+    <link rel="stylesheet" href="styles.css?v=14.0" />
     <meta name="theme-color" content="#163264" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -17,11 +17,11 @@
     <link rel="apple-touch-icon" sizes="152x152" href="icon-152.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
-    <link rel="manifest" href="manifest.json?v=13.0" />
+    <link rel="manifest" href="manifest.json?v=14.0" />
     <meta name="apple-touch-startup-image" content="load.png" />
     <meta name="mobile-web-app-capable" content="yes" />
 
-    <script defer src="script.js?v=13.0"></script>
+    <script defer src="script.js?v=14.0"></script>
   </head>
   <!-- Google tag (gtag.js) -->
   <script
@@ -228,7 +228,7 @@
     <!-- PWA Manifest Versioning & Automatic Update System -->
     <script>
       (function() {
-        const CURRENT_VERSION = '13.0';
+        const CURRENT_VERSION = '14.0';
 
         // Check manifest version and force PWA update when a new version is detected
         async function checkPwaVersion() {
@@ -239,8 +239,8 @@
             const serverVersion = manifest.version || CURRENT_VERSION;
             const storedVersion = localStorage.getItem('pwa_version');
 
-            if (storedVersion && storedVersion !== serverVersion) {
-              console.log('[PWA] Newer version detected in manifest:', serverVersion, '(active:', storedVersion, ')');
+            if (storedVersion !== serverVersion) {
+              console.log('[PWA] Version change detected:', serverVersion, '(was:', storedVersion, ')');
               localStorage.setItem('pwa_version', serverVersion);
 
               // Clear all caches so stale assets are immediately purged
@@ -267,10 +267,6 @@
                 audio.addEventListener('ended', () => window.location.reload(), { once: true });
               }
               return;
-            }
-
-            if (!storedVersion) {
-              localStorage.setItem('pwa_version', serverVersion);
             }
           } catch (err) {
             console.warn('[PWA] Version check notice:', err);
