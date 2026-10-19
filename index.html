@@ -8,7 +8,7 @@
     />
     <title>Corey Lawrence Music</title>
     <link rel="icon" href="./favicon.png" type="image/png" />
-    <link rel="stylesheet" href="styles.css?v=4.0" />
+    <link rel="stylesheet" href="styles.css?v=5.0" />
     <meta name="theme-color" content="#163264" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -21,7 +21,7 @@
     <meta name="apple-touch-startup-image" content="load.png" />
     <meta name="mobile-web-app-capable" content="yes" />
 
-    <script defer src="script.js?v=4.0"></script>
+    <script defer src="script.js?v=5.0"></script>
   </head>
   <!-- Google tag (gtag.js) -->
   <script
@@ -116,7 +116,22 @@
 
         <!-- Arrow navigation (rotates 180deg when open) -->
         <a id="arrow-link" role="button" aria-label="Toggle track list" tabindex="0">
-          <img id="image" src="down-arrow.png" alt="Navigation arrow" />
+          <svg
+            id="chevronIcon"
+            class="chevron-svg"
+            viewBox="0 0 28 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              d="M3 5L14 11.5L25 5"
+              stroke="white"
+              stroke-width="2.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </a>
       </div>
 

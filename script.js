@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     playPauseImg: document.getElementById('playPauseImg'),
     skipForwardBtn: document.getElementById('skipForwardButton'),
     arrowLink: document.getElementById('arrow-link'),
-    arrowImg: document.getElementById('image'),
+    chevronIcon: document.getElementById('chevronIcon'),
     mainPlayer: document.getElementById('mainPlayer'),
     songArea: document.getElementById('song-area'),
     songRows: document.querySelectorAll('.song')
@@ -377,11 +377,17 @@ document.addEventListener('DOMContentLoaded', () => {
     open() {
       state.isDrawerOpen = true;
       DOM.mainPlayer.classList.add('drawer-open');
+      if (DOM.songArea) {
+        DOM.songArea.classList.add('open');
+      }
     }
 
     close() {
       state.isDrawerOpen = false;
       DOM.mainPlayer.classList.remove('drawer-open');
+      if (DOM.songArea) {
+        DOM.songArea.classList.remove('open');
+      }
     }
   }
 
